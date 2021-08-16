@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>Change Favourite Artists</title>
+</head>
+<body class="editProfileForm">
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+			<i class="fas fa-user-edit"></i>
+			<div class = "form-group">
+				<h1>Change Your Favourite Artists</h1>
+				<h3>Your currently selected favourite artists are shown below</h3>
+				<div class = "formList">
+					<th:block th:each = "artist: ${instructor.favouriteArtists}">
+						<span class = "text-nowrap" th:text = "${artist.artist.artistName}"></span>
+					</th:block>
+				</div>
+				<h4>Change your favourite artists by selecting artists below and clicking the 'Change Favourites' button</h4>
+				<h5>If your favourite isn't listed, you can add them by clicking the 'Add New Artist' button</h5>
+			</div>
+			<form method="post" class = "editForm" action = "/editProfile/artist" id = "editArtistform">
+				<!--CSRF Token-->
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<div class="form-group" th:object = "${artistList}">
+					<select class="form-control" id = "editArtists" th:field = "*{artistList}" required multiple>
+						<th:block th:each = "artist: ${artists}">
+							<option th:text = "${artist.artistName}" th:value = "${artist.artistId}">
+						</th:block>
+					</select>
+					<a th:href = "@{/addArtist}">
+						<button type = "button" id = "addPlatformBtn" class = "btn-sm">Add New Artist</button>
+					</a>
+				</div>
+				<div class = "form-group">
+					<div class = "listSelected"></div>
+				</div>
+				<button type = "submit">Change Favourites</button>
+			</form>
+		</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

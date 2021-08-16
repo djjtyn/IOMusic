@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include = "fragments :: headElement">
+	<title>Add Genre</title>
+</head>
+<body class = "videoPlatformForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="fas fa-video"></i>
+		<h1>Add Video Call Platform</h1>
+		<div th:if = "${toolList == 'emptyRepo'}">
+			<h1 class = "text-center">Be the first to add a Video Calling Platform</h1>
+		</div>
+		<div th:unless = "${toolList =='emptyRepo'}" class = "text-center">
+			<h3>Are you sure your video calling platform isn't listed below already?</h3>
+			<div class = "formList">
+				<th:block th:each="tool: ${toolList}">
+					<span class = "text-nowrap" th:text = "${tool.name}"></span>
+				</th:block>
+			</div>
+		</div>
+		<form action = "addVideoPlatform" method = "post">
+			<!--CSRF Token-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<!--User can type in platform name using input below-->
+			<div class="form-group">
+				<label for="addPlatform">Add Video Calling Platform</label> 
+				<input type="text" class="form-control" id="addPlatform" name = "videoTool" placeholder="Type the name of the Video Call Platform here" autofocus required>
+			</div>
+			<div class = "form-group">
+				<button type="submit" class="btn btn-primary text-align">Add Platform</button>
+			</div>
+			<div class="form-group">
+				<a th:href = "@{register/instructor}" class = "loadFormButton" sec:authorize="isAnonymous()">
+					<button type="button">Back To Form</button>	
+				</a>
+				<a th:href = "@{editProfile/videoPlatform}" class = "loadFormButton" sec:authorize = "isAuthenticated()">
+					<button type="button">Back</button>	
+				</a>	
+			</div>
+		</form>
+		<div class = "loadingArea">
+			<img th:src="@{images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+			<h6>Loading</h6>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

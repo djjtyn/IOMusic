@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<head th:include="fragments :: headElement">
+<title>Student Login</title>
+</head>
+<body class = "loginForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<p class = "noBannerImageMessage" th:text = "${message}"></p>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="fas fa-user-circle"></i>
+		<h1>Student Login</h1>
+		<form action = "/student/login" method = "post" id="studentLoginForm">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<!--Email address Input-->
+			<div class="form-group">
+				<label for="studentEmailLogin">Email</label> 
+				<input type="email" id="studentEmailLogin" name="email" placeholder="Your email address" class="form-control" value = "test"required/> 
+			</div>
+			<div class="form-group">
+				<label for="studentPasswordLogin">Password</label> 
+		 		<input type="password" id="studentPasswordLogin" name="password" placeholder="Your Password" class="form-control" required/>
+		 	</div>
+		 	<div class="invalid-feedback form-group">
+   			 </div>
+		 	<button type="submit" class="btn">Login</button>
+		</form>
+	</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>Register Options</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<h1 class="text-center m-5">What type of Account do you want to Register?</h1>
+	<div class = "loadingArea">
+		<img th:src="@{images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+		<h6>Loading</h6>
+	</div>
+	<!--Container to hold the 2 registration options-->
+	<div class="container">
+		<div class="row">
+			<!--Student Registration option  -->
+			<div class="col-lg-6">
+				<div class="registrationOption">
+					<a th:href="@{/register/student}" class = "loadFormButton">
+						<div class=registrationOptionIcon>
+							<i class="fas fa-graduation-cap"></i>
+						</div>
+						<h1>Student</h1>
+						<p>Sign up today for a student account!</p>
+						<p>A student account can provide a lot of possibilities. With
+							a student account you will be able to book music lessons with a
+							wide range of instructors and leave feedback for instructor's to
+							help fellow students choose an instructor.</p>
+					</a>
+				</div>
+			</div>
+			<!--Instructor Registration option  -->
+			<div class="col-lg-6">
+				<div class="registrationOption">
+					<a th:href="@{/register/instructor}" class = "loadFormButton">
+						<div class=registrationOptionIcon>
+							<i class="fas fa-university"></i>
+						</div>
+						<h1>Instructor</h1>
+						<p>Sign up today for an Instructor account!</p>
+						<p>With an instructor account, you can provide music lessons to
+							student's via a video calling platform of your choice and generate
+							some income. Instructors receive 100% of any income generated!</p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

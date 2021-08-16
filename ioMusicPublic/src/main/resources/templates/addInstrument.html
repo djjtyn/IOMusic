@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include = "fragments :: headElement">
+	<title>Add Instrument</title>
+</head>
+<body class = "instrumentForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="fas fa-guitar"></i>
+		<h1>Add an Instrument</h1>
+		<div th:if = "${instrumentList == 'emptyRepo'}">
+			<h1 class = "text-center">Be the first to add an Instrument</h1>
+		</div>
+		<!--If there are instruments in the repo show them-->
+		<div th:unless = "${instrumentList =='emptyRepo'}" class = "text-center">
+			<h1>Our Already existing instruments</h1>
+			<div class = "formList">
+				<th:block th:each="instrument: ${instrumentList}">
+					<span class = "text-nowrap" th:text = "${instrument.name}"></span>
+				</th:block>
+			</div>
+		</div>
+		<form action = "addInstrument" method = "post">
+			<!--CSRF Token-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<!--User can type in instrument name using input below-->
+			<div class="form-group">
+				<label for="instrumentName">Add Instrument</label> 
+				<input type="text"class="form-control" id="instrumentName" name = "instrument" placeholder="Instrument Name"  autofocus required>
+			</div>
+			<div class = "form-group">
+				<button type="submit" class="btn btn-primary text-align">Add Instrument</button>
+			</div>
+			<div class="form-group">
+				<a th:href = "@{register/instructor}" class = "loadFormButton">
+					<button type="button">Back To Form</button>	
+				</a>	
+			</div>
+		</form>
+		<div class = "loadingArea">
+			<img th:src="@{images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+			<h6>Loading</h6>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

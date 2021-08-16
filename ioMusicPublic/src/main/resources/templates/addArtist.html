@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include = "fragments :: headElement">
+	<title>Add Artist</title>
+</head>
+<body class = "artistForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="fas fa-user-plus"></i>
+		<h1>Add an Artist</h1>
+		<div th:if = "${artistsList == 'emptyRepo'}">
+			<h1 class = "text-center">Be the first to add an Artist</h1>
+		</div>
+		<!--If there are artists in the repo show them-->
+		<div th:unless = "${artistList =='emptyRepo'}" class = "text-center">
+			<h3>Are you sure the Artist isn't listed below already?</h3>
+			<div class = "formList">
+				<th:block th:each="artist: ${artistList}">
+					<span class = "text-nowrap" th:text = "${artist.artistName}"></span>
+				</th:block>
+			</div>
+		</div>
+		<form action = "addArtist" method = "post">
+			<!--CSRF Token-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<!--User can type in artist name using input below-->
+			<div class="form-group">
+				<label for="artist">Add Artist</label> 
+				<input type="text"class="form-control" id="artist" name = "artist" placeholder="Artist Name"  autofocus required>
+			</div>
+			<div class="form-group">
+				<button type="submit">Add Artist</button>
+			</div>
+			<div class="form-group">
+				<a th:href = "@{register/instructor}" class = "loadFormButton" sec:authorize="isAnonymous()">
+					<button type="button">Back To Form</button>	
+				</a>
+				<a th:href = "@{editProfile/artist}" class = "loadFormButton" sec:authorize = "isAuthenticated()">
+					<button type="button">Back</button>	
+				</a>	
+			</div>
+		</form>
+		<div class = "loadingArea">
+			<img th:src="@{images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+			<h6>Loading</h6>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

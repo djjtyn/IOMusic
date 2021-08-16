@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include="fragments :: headElement">
+<title>View Instructors</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<div class="imgArea">
+		<p th:text="${searchResult}" class="pageMessage"></p>
+		<h1 class="pageHeading">Instructors</h1>
+		<img th:src="@{/images/musicians.jpg}" alt="hiddenMusicians" class="pageBannerImg">
+		<form class = "searchForm" method = "post" action = "viewInstructors">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<i class="fas fa-search"></i>
+			<input type = "text" placeholder = "Search for an Instructor" name = "searchQuery"/>
+		</form>
+	</div>
+	<div class="container-fluid">
+		<div class="rowWrapper">
+			<!--Block to display information if there are no candidate application-->
+			<div th:if="${instructors =='emptyRepo'}">
+				<h1 class="text-center">It seems there are no instructors to
+					display</h1>
+			</div>
+			<!--If there are candidate applications show them-->
+			<div th:unless="${instructors =='emptyRepo'}">
+				<th:block th:each="instructor: ${instructors}">
+					<div class="candidateRow">
+						<div class="row instructorTextArea">
+							<div class="col-sm-12 col-md-4">
+								<!--Display each instructors name and a user icon-->
+								<div class="instructorPic">
+									<h3
+										th:text="${instructor.firstName} + ' &nbsp;' + ${instructor.lastName}"></h3>
+									<i class="far fa-user"></i>
+								</div>
+							</div>
+							<!--This is the area for the instructors description-->
+							<div class="col-sm-12 col-md-4">
+								<p class="instructorDescription"
+									th:text="${instructor.description}"></p>
+							</div>
+							<!--This is the area for the instructors preferences-->
+							<div class="col-sm-12 col-md-4 text-center">
+								<!--Display Hourly Rate-->
+								<span class="font-weight-bold">Hourly Rate:</span><span
+									th:text="&#8364; + ${instructor.hourlyRate}"></span> <br>
+								<!--Display Genre-->
+								<span class="font-weight-bold">Genre:</span><span
+									th:text="${instructor.genreId.genreName}"></span> <br>
+								<!--Display each instructors videoTools(If only one display in a span element otherwise display in a list)-->
+								<th:block th:if="${instructor.videoTools.size()==1}">
+									<span class="font-weight-bold">Video Tool: </span>
+									<span th:text="${instructor.videoTools.get(0).videoTool.name}"></span>
+									<br>
+								</th:block>
+								<th:block th:if="${instructor.videoTools.size()>1}">
+									<ul>
+										<li class="font-weight-bold">Video Tools</li>
+										<th:block th:each="videoTool: ${instructor.videoTools}">
+											<li th:text="${videoTool.videoTool.name}"></li>
+										</th:block>
+									</ul>
+								</th:block>
+								<!--Display each instructors Instruments(If only one display in a span element otherwise display in a list)-->
+								<th:block th:if="${instructor.instruments.size()==1}">
+									<span class="font-weight-bold">Instrument: </span>
+									<span
+										th:text="${instructor.instruments.get(0).instrument.name}"></span>
+									<br>
+								</th:block>
+								<th:block th:if="${instructor.instruments.size()>1}">
+									<ul>
+										<li class="font-weight-bold">Instruments</li>
+										<th:block th:each="instrument: ${instructor.instruments}">
+											<li th:text="${instrument.instrument.name}"></li>
+										</th:block>
+									</ul>
+								</th:block>
+								<!--Display each instructors Favourite Artists(If only one display in a span element otherwise display in a list)-->
+								<th:block th:if="${instructor.favouriteArtists.size()==1}">
+									<span class="font-weight-bold">Favourite Artist: </span>
+									<span
+										th:text="${instructor.favouriteArtists.get(0).artist.artistName}"></span>
+									<br>
+								</th:block>
+								<th:block th:if="${instructor.favouriteArtists.size()>1}">
+									<ul>
+										<li class="font-weight-bold">Favourite Artists</li>
+										<th:block th:each="artist: ${instructor.favouriteArtists}">
+											<li th:text="${artist.artist.artistName}"></li>
+										</th:block>
+									</ul>
+								</th:block>
+							</div>
+						</div>
+						<!--This is the area for the buttons-->
+						<!--If the user is not logged in or is logged into an instructor account-->
+						<div
+							sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
+							<div class="row">
+								<div class="col-sm-12">
+									<a
+										th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button
+											class="btn btn-primary">View Profile</button></a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<!--The content in the div below will only be shown if the user is not logged in-->
+									<p>Log into a Student account to request a lesson with this
+										instructor</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<a th:href="@{/student/login}"><button class="btn-success">Login</button></a>
+									<a th:href="@{/register/student}"><button
+											class="btn-danger">Register</button></a>
+								</div>
+							</div>
+						</div>
+						<!--If the user is a logged in student-->
+						<div
+							sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'student'}">
+							<div class="row studentButtons">
+								<a
+									th:href="@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">
+									<button class="btn btn-success">Request Lesson</button>
+								</a> <a
+									th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}">
+									<button class="btn btn-primary">View Profile</button>
+								</a>
+							</div>
+						</div>
+						<!--If the user is a logged in admin-->
+						<div
+							sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'admin'}">
+							<div class="row">
+								<div class="col-sm-12">
+									<a
+										th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button
+											class="btn btn-primary">View Profile</button></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>
+				<!--Pagination Area-->
+				<ul class = "pagination">
+					<li th:if = "${currentPage-1 >= 0 }">
+						<a th:text = "Prev" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
+					</li>
+					<li th:text = "${currentPage + 1}"></li>
+					<li th:if = "${currentPage + 1 < pageAmount}">
+						<a th:text = "Next" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

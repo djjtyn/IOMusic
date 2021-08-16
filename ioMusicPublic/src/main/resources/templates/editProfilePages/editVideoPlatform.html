@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>Change Video Platforms</title>
+</head>
+<body class="editProfileForm">
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+			<i class="fas fa-user-edit"></i>
+			<div class = "form-group">
+				<h1>Change Video Platforms</h1>
+				<h3>Your currently selected platforms are shown below</h3>
+				<div class = "formList">
+					<th:block th:each = "videoTool: ${instructor.videoTools}">
+						<span class = "text-nowrap" th:text = "${videoTool.videoTool.name}"></span>
+					</th:block>
+				</div>
+				<h4>Change your video platforms by selecting video platforms  below and clicking the 'Change Video Platform(s)' button</h4>
+				<h5>If a video platform you want to use isn't listed, you can add it by clicking the 'Add New Video Platform' button</h5>
+			</div>
+			<form method="post" class = "editForm" action = "/editProfile/videoPlatform" id = "editPlatformform">
+				<!--CSRF Token-->
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<div class="form-group" th:object = "${videoToolList}">
+					<select class="form-control" id = "editVideoTools" th:field = "*{videoToolList}" required multiple>
+						<th:block th:each = "videoTool: ${videoTools}">
+							<option th:text = "${videoTool.name}" th:value = "${videoTool.videoToolId}">
+						</th:block>
+					</select>
+					<a th:href = "@{/addVideoPlatform}">
+						<button type = "button" id = "addPlatformBtn" class = "btn-sm">Add New Platform</button>
+					</a>
+				</div>
+				<div class = "form-group">
+					<div class = "listSelected"></div>
+				</div>
+				<button type = "submit">Change Video Platform(s)</button>
+			</form>
+		</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

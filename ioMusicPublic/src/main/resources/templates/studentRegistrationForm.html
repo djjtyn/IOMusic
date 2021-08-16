@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>Student Registration Form</title>
+</head>
+<body class = "registrationForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="fas fa-book-reader"></i>
+		<h1>Student Registration</h1>
+		<form action="/register/student/new" method="post" id = "studentRegistrationForm">
+			<!--CSRF Token-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<!--First Name-->
+			<div class="form-group">
+				<label for="studentFirstName">First Name</label> 
+				<input type="text"class="form-control" id="studentFirstName" name="studentFirstName" placeholder="Your first name" required>
+			</div>
+			<!--Last Name-->
+			<div class="form-group">
+				<label for="studentLastName">Last Name</label> 
+				<input type="text" class="form-control" id="studentLastName" name = "studentLastName" placeholder="Your last name" required>
+			</div>
+			<!--Email-->
+			<div class="form-group">
+				<label for="studentEmail">Email Address</label> 
+				<input type="email" class="form-control" id="studentEmail" name="studentEmail" placeholder="Your email address" required>
+			</div>
+			<!--Password-->
+			<div class="form-group">
+				<label for="studentPassword">Password</label> 
+				<input type="password" class="form-control" id="studentPassword" name = "password" placeholder="Choose a password" required>
+			</div>
+			<!--Password Confirm-->
+			<div class="form-group">
+				<label for="studentPasswordConfirm">Confirm Password</label> 
+				<input type="password" class="form-control" id="studentPasswordConfirm" placeholder="Confirm your password" required>
+			</div>
+			<!--TimeZone Selection-->
+			<div class="form-group">
+				<label for="studentTimeZone">Your TimeZone</label> 
+				<select class="form-control" id="studentTimeZone" name = "timeZone" required>
+					<th:block th:each="timeZone: ${timeZoneList}">
+						<option th:text="${timeZone.timeZone}" th:value="${timeZone.id}" />
+					</th:block>
+				</select>
+			</div>
+			<div class="invalid-feedback form-group">
+      			Your Passwords don't match
+   			 </div>
+			<div class = "text-center">
+				<button type="submit" class="btn btn-primary text-align">Submit</button>
+			</div>
+		</form>
+	</div>
+
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

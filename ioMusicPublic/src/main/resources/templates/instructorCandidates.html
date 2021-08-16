@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include = "fragments :: headElement">
+	<title>View Instructor Candidates</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Banner Image-->
+	<div class = "imgArea">
+		<p th:text = "${message}" class="pageMessage"></p>
+		<h1 class ="pageHeading">Instructor Candidates</h1>
+		<img th:src="@{/images/musicians.jpg}" alt="hiddenMusicians" class="pageBannerImg">
+	</div>
+	<div class = "container-fluid">
+		<div class = "rowWrapper">
+			<!--Block to display information if there are no candidate application-->
+			<div th:if = "${candidateApplications =='emptyRepo'}">
+				<h1 class = "text-center">There are no instructor candidate applications to show</h1>
+			</div>
+			<!--If there are candidate applications show them-->
+			<div th:unless = "${candidateApplications =='emptyRepo'}">
+				<!--Each candidate will have their own row split into three parts-->
+				<th:block th:each="candidate: ${candidateApplications}">
+					<div class = "row candidateRow">
+						<div class = "col-sm-12 col-md-4">
+							<!--Display the date the application was made-->
+							<span class = "font-weight-bold">Date Applied: </span><span th:text ="${candidate.creationDate}"></span><br>
+							<!--Display each candidates name-->
+							<span class = "font-weight-bold">Name: </span><span th:text = "${candidate.candidate.firstName} + ' ' + ${candidate.candidate.lastName}"></span><br>
+							<!--Display each candidate email-->
+							<span class = "font-weight-bold">Email: </span><span th:text = "${candidate.candidate.email}"></span><br>
+							<!--Display each candidate hourly rate-->
+							<span class = "font-weight-bold">Hourly Rate: </span><span th:text ="&#8364; + ' ' + ${candidate.candidate.hourlyRate}"></span><br>
+							<!--Display each candidate genre-->
+							<span class = "font-weight-bold">Genre: </span><span th:text = "${candidate.candidate.genreId.genreName}"></span><br>
+							<span class = "font-weight-bold">Status: </span><span th:text = "${candidate.status.statusType}"></span><br>
+						</div>
+						<!--This is the area for the candidates description, instruments, favourite artists and video tools-->
+						<div class = "col-sm-12 col-md-6 text-center">
+							<p th:text = "${candidate.candidate.description}"></p>
+							<!--Display each candidate's videoTools-->
+							<span class = "font-weight-bold">Video Platforms: </span>
+							<th:block th:each = "videoTool: ${candidate.candidate.videoTools}">
+								<span th:text = "${videoTool.videoTool.name} + ','"></span>
+							</th:block>
+							<br>
+							<!--Display each candidate's instruments-->
+							<span class = "font-weight-bold">Instruments: </span>
+							<th:block th:each = "instrument: ${candidate.candidate.instruments}">
+								<span th:text = "${instrument.instrument.name} + ','"></span>
+							</th:block>
+							<br>
+							<!--Display each candidate's favourite artists-->
+							<span class = "font-weight-bold">Favourite Artists: </span>
+							<th:block th:each = "artist: ${candidate.candidate.favouriteArtists}">
+								<span th:text = "${artist.artist.artistName} + ','"></span>
+							</th:block>
+						</div>
+						<!--This is the area for the Approve and Decline buttons-->
+						<div class = "col-sm-12 col-md-2 requestButtons">
+							<a th:if="${candidate.status.statusType == 'Pending Approval'}" th:href = "@{'/admin/instructorCandidate/approve/'} + ${candidate.candidate.candidateId}">
+								<button type="button" class="validButton">Approve</button>
+							</a>
+							<a th:if="${candidate.status.statusType == 'Pending Approval'}" th:href = "@{'/admin/instructorCandidate/decline/'} + ${candidate.candidate.candidateId}">
+								<button type="button" class="declineButton">Decline</button>
+							</a>
+							<!--If the candidate has been Declined-->
+							<button th:if="${candidate.status.statusType == 'Declined'}" class="declined disabled">Declined</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

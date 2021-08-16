@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include = "fragments :: headElement">
+	<title>Home Page</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Banner Image-->
+	<div class = "imgArea">
+		<p th:text = "${message}" class="pageMessage"></p>
+		<img th:src="@{images/homePageBanner.jpg}" alt="guitarwithlaptop" class="pageBannerImg">
+	</div>
+	<div class="container-fluid">
+		<!--Company Overview area-->
+		<div class = "row indexBox">
+			<div class = "col-md-6">
+				<h1>What is I/O Music?</h1>
+				<p>I/O Music is a web application that facilitates the booking and payment of virtual music lesson's with instructors. Every instructor found on our site has assessed by an 
+				I/O Music staff member prior to being listed on the site to ensure that students only book instructors who walk the walk and talk the talk.</p>
+				<h3>Students Users</h3>
+				<p>Our aim to allow each student to find an instructor that best matches the style of music they are wanting to learn, which is why we require each instructor to provide details
+				of their own musical preferences.</p>
+				<p>Request a lesson for a time and date that work for you. Your chosen time and date need to be approved by the instructor prior to your request being confirmed.</p>
+				<p>Each lesson is conducted on a third-party video calling platform agreed upon by instructor and student prior to the lesson. Each instructor will have the
+				video calling platforms they use listed for them.</p>
+				<h3></h3>
+				<h3>Instructor Users</h3>
+				<p>Set your own hourly charge rate.</p>
+				<p>Work to your own schedule. Only confirm lesson requests for a particular time and date that suit you.</p>
+				<p>Choose the video calling platforms that best suit yourself.</p>
+			</div>
+			<div class = "col-md-6">
+				<img th:src="@{images/homePageQuestion.jpg}" class = "indexOverviewImage" alt="questionMarks">
+			</div>
+		</div>
+		<div class = "row indexBox">
+			<div class = "col-md-6">
+				<img th:src="@{images/musicShop.jpg}" class = "indexInstrumentImage" alt="musicShop">
+			</div>
+			<div class = "col-md-6">
+				<h1>Instruments</h1>
+				<h3>At I/O Music we provide lessons for instruments such as: </h3>
+				<th:block th:each="instrument: ${instruments}">
+					<h4 th:text = "${instrument}"></h4>
+				</th:block>
+			</div>
+		</div>
+		<div class = "row">
+			<!--Payment Info-->
+			<div class = "col-md-4 indexTrioBox">
+				<i class="fas fa-lock"></i>
+				<h1>Payment</h1>
+				<p>All payments made on in I/O Music are processed using <strong>Stripe</strong>. Stripe is a PCI Service Provider Level 1 which is the highest grade of processing security. 
+				All transactions are SSL (Secure Socket Layer) which ensures all payment information is securely transmitted. All bank card numbers are encrypted throughout 
+				each secure transactions. We do not store user bank card details</p>
+			</div>
+			<div class = "col-md-4 indexTrioBox">
+				<i class="fas fa-video"></i>
+				<h1>Tech Requirements</h1>
+				<p>In order to partake in a video call lesson, users will need to have video calling software on the device they use.</p>
+			</div>
+			<div class = "col-md-4 indexTrioBox">
+				<i class="far fa-calendar-alt"></i>
+				<h1>Schedule</h1>
+				<p>Choose a time that suits you. Students request a time for a lesson which can either be approved or declined by instrucotrs. If your an nstructor and the time does not suit
+				you, decline the request. If the time does suit you, approve the request.</p>
+			</div>
+		</div>
+
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	</div>
+	<!--JavaScript Scripts-->
+	<div th:insert = "fragments :: jsScripts"></div>
+</body>
+</html>

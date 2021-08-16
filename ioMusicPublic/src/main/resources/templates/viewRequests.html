@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>View Instructors</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<!--Banner Image-->
+	<div class="imgArea">
+		<p th:text="${message}" class="pageMessage"></p>
+		<h1 th:unless = "${#authentication.getPrincipal().getRole == 'admin'}" class="pageHeading">Your Lesson Requests</h1>
+		<h1 th:if="${#authentication.getPrincipal().getRole == 'admin'}" class = "pageHeading">All Lesson Requests</h1>
+		<img th:src="@{images/planner.jpg}" alt="planner" class="pageBannerImg">
+	</div>
+	<div class="container-fluid">
+		<div class="rowWrapper">
+			<!--Block to display information if there are no lesson requests-->
+			<div th:if="${lessonRequest == 'empty'}">
+				<h1 class="text-center">There are no Lesson Requests to show for you</h1>
+			</div>
+			<!--If there are lesson requests show them-->
+			<div th:unless="${lessonRequest =='empty'}">
+				<th:block th:each="request: ${lessonRequest}">
+					<div class = "candidateRow">
+						<div class="row">
+							<div class="col-sm-12 col-md-5 text-center">
+								<h5 th:if = "${request.status.statusType == 'Pending Approval'}" th:text="Requested + ' For' + ': ' + ${request.getDate()} + ' @ ' + ${request.getTime()}"></h5>
+								<h5 th:unless = "${request.status.statusType == 'Pending Approval'}" th:text="Approved + ' For' + ': ' + ${request.getDate()} + ' @ ' + ${request.getTime()}"></h5>
+								<!--If logged in user is an instructor, display student name and email address-->
+								<h5 th:if="${#authentication.getPrincipal().getRole == 'instructor'}" th:text="Student + ' Name' + ': ' + ${request.student.firstName} + ' ' + ${request.student.lastName}"></h5>
+								<h5 th:if="${#authentication.getPrincipal().getRole == 'instructor'}" th:text="Student + ' Email' + ': ' + ${request.student.email}"></h5>
+								<!--If logged in user is a student, display instructor name-->
+								<h5 th:if="${#authentication.getPrincipal().getRole == 'student'}" th:text="Instructor + ' Name' + ': ' + ${request.instructor.firstName} + ' ' + ${request.instructor.lastName}"></h5>
+								<h5 th:text="Lesson + ' ' + Type + ': ' + ${request.instrument.name}"></h5>
+								<!--If duration is greater than one hour add an 's' to the end of the word hour-->
+								<h5 th:if="${request.duration==1}" th:text="Lesson + ' ' + Duration + ': ' + ${request.duration} + ' hour'"></h5>
+								<h5 th:if="${request.duration>1}" th:text="Lesson + ' ' + Duration + ': ' + ${request.duration} + ' hours'"></h5>
+							</div>
+							<div class="col-sm-12 col-md-5">
+								<h2 th:text="Lesson + ' ' + Status + ': ' + ${request.status.statusType}"></h2>
+								<h5 th:text="Lesson + ' ' + Cost + ': &#8364;' + ${request.cost}"></h5>
+							</div>
+							<!--Buttons will differ depending on wheither the user is a student or instructor-->
+							<div class="col-sm-12 col-md-2">
+								<!--If the user is an instructor-->
+								<div th:if="${#authentication.getPrincipal().getRole == 'instructor'}" class = "requestButtons">
+									<!--If the lesson request status is Pending Approval-->
+									<a th:if="${request.status.statusType == 'Pending Approval'}" th:href="@{'lessonRequest/' + ${request.requestId} + '/approve'}">
+										<button class = "validButton">Approve</button>
+									</a> 
+									<a th:if="${request.status.statusType == 'Pending Approval'}" th:href="@{'lessonRequest/' + ${request.requestId} + '/decline'}">
+										<button class = "declineButton">Decline</button>
+									</a>
+									<!--If the lesson request status is Approved-->
+									<button th:if="${request.status.statusType == 'Approved'}" class="valid disabled">Approved</button>
+									<!--If the lesson request status is Declined-->
+									<button th:if="${request.status.statusType == 'Declined'}" class="declined disabled">Declined</button>
+									<!--If the lesson request status is paid-->
+									<a th:if="${request.status.statusType == 'Paid'}" th:href="@{'lessonRequest/' + ${request.requestId} + '/attachVideoLink'}">
+										<button class = "validButton">Send Link</button>
+									</a>
+									<!--If the video link has been sent-->
+									<button th:if="${request.status.statusType == 'Videolink Sent'}" class="valid disabled">Videolink Sent</button>
+								</div>
+								<!--If the user is a student-->
+								<div th:if="${#authentication.getPrincipal().getRole == 'student'}" class = "requestButtons">
+									<!--If the lesson request status is Pending Approval-->
+									<button th:if="${request.status.statusType == 'Pending Approval'}" class=" valid disabled">Requested</button>
+									<!--If the lesson request status is Approved-->
+									<form th:if="${request.status.statusType == 'Approved'}" method="post" th:action="@{/lessonRequest/createPaymentIntent/} + ${request.requestId}">
+										<button type="submit" class = "validButton"><sup><i class="fas fa-exclamation-triangle"></i></sup>Pay</button>
+									</form>
+									<!--If the lesson request status is Declined-->
+									<button th:if="${request.status.statusType == 'Declined'}" class="declined disabled">Declined</button>
+									<!--If the lesson request status is Paid-->
+									<button th:if="${request.status.statusType == 'Paid'}" class="valid disabled">Paid</button>
+								</div>
+							</div>
+						</div>
+						<div class="row videoLink" th:if="${request.status.statusType == 'Videolink Sent'}">
+							<div class = "col-sm-12">
+								<h5>Video Link:</h5>
+								<a th:href="${request.lesson.videoCallLink}" th:text="${request.lesson.videoCallLink}" class = "videoLink"></a>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</div>
+		</div>
+	</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

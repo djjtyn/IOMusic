@@ -1,0 +1,608 @@
+/*General Styling*/
+* {
+	box-sizing: border-box;
+	font-family:"arial";
+	word-wrap:break-word;
+} /*box-sizing set as border-box*/
+
+body{
+	margin:0;
+	padding:0;
+}
+
+nav {
+	min-width:100%;
+	display:inline;
+}
+
+.navbar-nav {
+	width:auto;
+	color:black;
+}
+
+.navbarGreeting {
+	margin:auto;
+}
+
+.navBarNotification {
+	background-color:red;
+	color:white;
+	padding:.3em;
+	border-radius:100%;
+	transition: .5s ease-in-out .1s
+}
+
+.navBarNotification:hover {
+	font-size:1.1em;
+}
+
+.logoutBtn {
+	background-color:inherit;
+	color:#FFFFFF80;
+	border:none;
+}
+
+.logoutBtn:hover {
+	color:rgba(255,255,255,.75);
+	cursor:pointer;
+}
+
+#footer {
+	position:relative;
+	bottom:0;
+	width:100%;
+	text-align:center;
+} /*Centers the page footer at the bottom of the page*/
+
+.imgArea{
+	position:relative;
+	text-align:center;
+	padding-bottom:1em;
+}
+
+.pageBannerImg {
+    height: 70vh;
+    width:100%;
+    object-fit: cover;         
+} /*allows each page images banner to be the same height and width*/
+
+.pageHeading {
+	position:absolute;
+	bottom:40%;
+	word-wrap:break-word;
+	font-size:3em;
+	width:100%;
+	color:white;
+}
+
+.searchForm {
+	position:absolute;
+	top:65%;
+	width:100%;
+	color:white;
+}/*Styling for the search bar's in the page headings*/
+
+.searchForm input {
+	background-color:inherit;
+	border:.1em solid white;
+	width:50%;
+	border-radius:2em;
+	text-align:center;
+	color:white;
+}
+
+.searchForm input::placeholder {
+	color:white;
+}
+
+@media only screen and (min-width: 600px){
+	.searchForm i {
+		position:relative;
+		left:2em;
+	}
+}
+
+
+
+@media only screen and (min-width: 600px){
+	.pageHeading {
+		bottom:50%;
+		font-size:4em;
+	}
+}/*This centers the page headings contained in pages with banner images on larger screens*/
+
+.pageMessage {
+	position:absolute;
+	width:100%;
+	opacity: 0.5;
+	top:1em;
+	background-color:black;
+	color:white;
+} /*Styling for messages that appear on top of the page when an action is completed eg payment was successful*/
+
+.noBannerImageMessage {
+	margin-top:2em;
+	text-align:center;
+	width:100%;
+	top:1em;
+	background-color:black;
+	color:red;
+}
+
+.loadingArea{
+	text-align:center;
+	display:none;
+}
+.loadingGif {
+	height:5em;
+}
+/*Forms*/
+.formWrap {
+	background-color:black;
+	opacity:0.9;
+	color:white;
+	padding:0em 1em 2em 1em;
+	text-align:center;
+	border-radius:.5em;
+	font-size:1.1em;
+}/*This class is for the form wrappers*/
+
+@media only screen and (min-width: 600px){
+	.formWrap {
+	width:50%;
+	margin:8em auto;
+	}
+}/*This class makes the form in the form wrapper smaller on screen sizes above 700*/
+
+.formWrap i {
+	text-align:center;
+	font-size:6em;
+	margin:0 auto;
+	color:red;
+	background-color:black;
+	border-radius:1em;
+	position:relative;
+	padding:.2em;
+	top:-.7em;	
+}/*This class is for the form icons*/
+
+.formWrap h1 {
+	position:relative;
+	top:-1.5em;
+}
+
+.loginForm {
+	background: url(../images/loginBg.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;
+}/*This class is assigned to the body for the login forms*/
+
+.registrationForm{
+	background: url(../images/amps.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the registration forms*/
+
+.instructorRegistrationForm {
+	width:100%;
+}
+
+.registrationForm textArea{
+	width:100%;
+	height:5em;
+}/*Styling to make the instructor registration form description area the same width as the other inputs*/
+
+.editProfileForm {
+	background: url(../images/editProfilePic.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the edit profile form*/
+
+#editDescription {
+	width:100%;
+	height:10em;
+}
+
+.genreForm {
+	background: url(../images/vinyl.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the genre form*/
+
+.instrumentForm {
+	background: url(../images/instruments.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the instrument form*/
+
+.artistForm {
+	background: url(../images/concert.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the artist form*/
+
+.videoPlatformForm {
+	background: url(../images/laptop.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the videoPlatform form*/
+
+.requestForm {
+	background: url(../images/calender.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;
+}
+
+.paymentForm {
+	background: url(../images/laptop.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;	
+}/*This class is assigned to the body for the payment form*/
+
+.paymentForm .formWrap{
+	text-align: inherit;
+}
+
+.paymentForm #cardHolderName {
+	color: white;
+	width:100%;
+    font-Weight: 500;
+    font-Family: 'Roboto, Open Sans, Segoe UI, sans-serif';
+   	font-Size: 16px;
+   	background-color:transparent;
+   	border:none
+}/*Styling for the cardholder name section of the payment form. It is the only input on the form Stripe does not provide an element for*/
+
+.paymentForm #cardHolderName:focus {
+	outline:none;
+}
+
+.paymentForm #cardHolderName placeholder {
+	color:#87BBFD;
+	 text-align:center;
+}
+
+.videoLinkForm {
+	background: url(/images/cameralens.jpg);
+	background-size: cover;
+	background-position:center;
+	display:grid;
+}
+
+.videoLinkForm .formWrap {
+	position:absolute;
+	top:25%;
+	left:0;
+	right:0;
+}
+
+.formList{
+	margin:2em auto;
+}
+.formList span{
+	padding:0 1em;
+	margin:.2em;
+	background-color:red;
+	border-radius:1em;
+
+}
+
+.formWrap .form-group {
+	position:relative;
+	top: -1.5em;
+}
+.formWrap button{
+	background-color:red;
+	color:white;
+	border-radius:1em;
+	transition: .5s ease-in-out .1s
+}
+.formWrap button[type=submit] {
+	padding:.6em 4em;
+	position:relative;
+	top: -.5em;
+}
+
+.formWrap button:hover {
+	background-color:white;
+	color:red;
+	cursor: pointer;
+}
+
+/*Home Page*/
+.indexBox {
+	margin:0 0 1em 0;
+}
+
+.indexBox h1{
+	text-align:center;
+	padding:1em;
+}
+
+.indexBox .indexOverviewImage {
+	max-width: 100%;
+	height:100%;
+}
+
+.indexBox .indexInstrumentImage {
+	min-width:100%;
+	height:32em;
+}
+
+@media only screen and (max-width: 600px) {
+  .indexBox .indexInstrumentImage {
+    height:18em;
+  }
+}
+
+.indexTrioBox {
+	text-align:center;
+	border:.1em solid black;
+	padding:1em;
+}
+
+.indexTrioBox i {
+	font-size:4em;
+	padding:1em;
+	margin:.2em;
+	border:.1em solid black;
+	
+}
+/*Registration Options Styling*/
+.registrationOption {
+	min-width: 80%;
+	height: 100%;
+	border: 1px solid;
+	padding:1em;
+}	/*Styling for the two registration option boxes*/
+
+.registrationOption a {
+	color:inherit;
+}/*Removes the link styling from each registration option button*/
+
+.registrationOption:hover{
+	background-color:black;
+	color:white;
+	transition-duration: .5s;
+}
+
+.registrationOptionIcon {
+	font-size:11em;
+	text-align: center;
+}
+
+
+/*Page that shows the instructor candidate and instructor listings*/
+.rowWrapper {
+	width:100%;
+	margin:auto;
+}
+
+.rowWrapper ul {
+	list-style: none;
+	padding-left:0;
+}
+
+.candidateRow{
+	margin-bottom:1em;
+	border: 1px solid black;
+	height:auto;
+	width:auto;
+	text-align:center;
+	word-wrap: break-word;
+	padding:1em;
+}
+
+
+.candidateRow i {
+	font-size:10em;
+	padding:.1em 0;
+}
+
+.candidateRow span {
+	margin-bottom:1em;
+}
+
+.instructorTextArea {
+	margin-bottom:1.5em
+}
+
+
+.studentButtons {
+	justify-content:center;
+}
+
+.studentButtons button {
+	padding:.5em;
+	margin:.3em;
+}
+
+.buttons button{
+	display:block;
+	width:80%;
+	height: 30%;
+	padding:1em;
+	margin:1em;
+	line-height:1em;
+}
+
+.pagination {
+	justify-content: center;
+}
+
+.pagination li {
+	font-size:1.5em;
+	margin:.2em;
+	padding:1em;
+	border:1px solid black;
+	border-radius:100%;
+	text-decoration:none;
+}
+
+/*Instructor Profile Pages*/
+.instructorPhoto {
+	font-size: 12em;
+	text-align:center;
+	height:auto;
+	width:20em;
+}
+
+.instructorPhoto img {
+	width:80%;
+	height:1.5em;
+	border-radius:100%;
+}
+
+@media only screen and (min-width: 600px){
+	.instructorPhoto img {
+		height:3em;
+	}
+}
+
+.profileTextArea {
+	background-color:red;
+}
+
+.profileButtons {
+	text-align:center;
+}
+.comments{
+	margin:1em;
+	width:100%;
+	text-align:center;
+}
+
+.commentDetails {
+	border:1px solid black;
+	border-radius:100%;
+	text-align:center;
+	padding:1em;
+}
+
+.comments i {
+	font-size:2em;
+	margin-bottom:.5em;
+}
+
+@media only screen and (min-width: 600px){
+	.commentContent {
+		position:relative;
+		top:50%;
+	}
+}
+
+.commentWrapper{
+	border:1px solid black;
+	padding:1em;
+}
+
+.commentWrapper textarea{
+	width:100%;
+	height:6em;
+	padding:1.5em;
+	margin-top: 1.5em;
+}
+
+.comment {
+	text-align:left;
+	border:1px solid black;
+	border-radius:2em;
+	padding:2em;
+	margin:1em;
+}
+
+/*Lesson Requests Page*/
+.requestButtons {
+	font-size:1.5em;
+}
+
+.requestButtons a{
+	text-decoration:none;
+}
+
+.requestButtons button {
+    display: block;
+    margin: 1.5em auto;
+    padding:.5em;
+    width: 80%;
+    border-radius: 1em;
+    color: white;
+    transition: .5s ease-in-out .1s;
+}
+
+.requestButtons i {
+	color:white;
+	font-size:.5em;
+	padding:.5em;
+}
+
+.requestButtons button:focus {
+	outline:none;
+}
+
+.validButton {
+	background-color:green;
+	cursor: pointer;
+}
+
+.validButton:hover {
+	background-color:white;
+	color:green;
+}
+
+.valid {
+	background-color:green;
+}
+
+.declineButton {
+	background-color:red;
+	cursor: pointer;
+}
+
+.declineButton:hover {
+	background-color:white;
+	color:red;
+}
+
+.declined {
+	background-color:red;
+}
+
+/*Error Page*/
+.errorWrap {
+	width:100%;
+	margin: 25% 0;
+	text-align:center;
+}
+
+.errorIcon{
+	display:inline-block;
+	color:orange;
+	font-size:12em;
+	margin: 0 .3em;
+}
+
+.errorText{
+	display:inline-block;
+	color:red;
+}
+
+.errorButton button {
+	background-color:green;color:white;
+	margin:3em;
+	height:5em;
+	width:auto;
+	border-radius:1em;
+}
+
+
+

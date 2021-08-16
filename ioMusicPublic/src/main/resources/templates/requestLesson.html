@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include = "fragments :: headElement">
+	<title>Request Lesson</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" integrity="sha512-aEe/ZxePawj0+G2R+AaIxgrQuKT68I28qh+wgLrcAJOz3rxCP+TwrK5SPN+E5I+1IQjNtcfvb96HDagwrKRdBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class = "requestForm">
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+		<i class="far fa-calendar-alt"></i>
+		<h1>Lesson Request</h1>
+		<h1 class ="text-center m-5" th:text = "Request + ' a' + ' lesson ' + 'with ' + ${instructor.firstName} + ' ' + ${instructor.lastName}"></h1>
+		<form action = "requestLesson" method = "post" id="lessonRequestForm">
+			<!--CSRF Token-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<!--Students date and time preference for the lesson-->
+			<div class="form-group">
+				<label for="dateTimePicker">What date and time do you want the lesson?</label>
+				<input type='datetime-local' class="form-control" id="dateTimePicker"  name = "dateTime" required>
+			</div>
+			<!--Students duration preference for the lesson-->
+			<div class="form-group">
+				<label for="durationPicker">How many hours do you want the lesson for?</label>
+				<select class="form-control" id="durationPicker" name="duration" required>
+					<th:block th:each="i : ${#numbers.sequence( 1, 9, 1)}">
+						<option th:text="${i}" th:value="${i}" />
+					</th:block>
+				</select>
+			</div>
+			<!--Students instrument preference for the lesson-->
+			<div class="form-group">
+				<label for="lessonInstrument">What Instrument?</label>
+				<select class="form-control" id="lessonInstrument" name="instrument" required>
+					<th:block th:each="instrument : ${instructor.instruments}">
+						<option th:text="${instrument.instrument.name}" th:value="${instrument.instrument.instrumentId}" />
+					</th:block>
+				</select>
+			</div>
+			<!--Students video call platform preference for the lesson-->
+			<div class="form-group">
+				<label for="lessonPlatform">What Video Calling Platform?</label>
+				<select class="form-control" id="lessonPlatform" name = "videoTool" required>
+					<th:block th:each="videoTool : ${instructor.videoTools}">
+						<option th:text="${videoTool.videoTool.name}" th:value="${videoTool.videoTool.videoToolId}" />
+					</th:block>
+				</select>
+			</div>
+			<div class="invalid-feedback form-group"></div>
+			<div class = "text-center">
+				<button type="submit" class="btn btn-primary">Request Lesson</button>
+			</div>
+		</form>
+	</div>
+	<!--Footer-->
+	<div th:insert = "fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+
+	<div th:insert = "fragments :: jsScripts"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+	
+</body>
+</html>

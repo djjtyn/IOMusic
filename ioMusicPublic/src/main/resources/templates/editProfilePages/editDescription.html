@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>Change Description</title>
+</head>
+<body class="editProfileForm">
+	<!--Navigation Bar-->
+	<div th:insert="fragments :: navBar"></div>
+	<!--Container for the form-->
+	<div class="formWrap">
+			<i class="fas fa-user-edit"></i>
+			<div class = "form-group">
+				<h1>Change Description</h1>
+				<h4>Change your description by typing in your new email address below and clicking the 'Change Description' button</h4>
+			</div>
+			<form method="post" class = "editForm" action = "/editProfile/description" id = "descriptionChangeForm">
+				<!--CSRF Token-->
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<div class="form-group">
+					<textarea id = "editDescription" name = "description" th:placeholder = "${description}"></textarea>
+				</div>
+				<div class = "invalid-feedback form-group"></div>
+				<button type = "submit">Change Description</button>
+			</form>
+		</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>

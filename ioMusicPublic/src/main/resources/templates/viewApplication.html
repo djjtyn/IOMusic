@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments :: headElement">
+<title>View Application</title>
+</head>
+<body>
+	<!--Navigation Bar-->
+	<div th:insert = "fragments :: navBar"></div>
+	<h1 class="text-center m-5">View Application</h1>
+	<h2 class = "text-center">Your application details are shown below</h2>
+	<div class = "container-fluid">
+			<div class = "candidateWrapper">
+					<div class = "row candidateRow">
+						<div class = "col-sm-12 col-md-6">
+							<!--Display applicant name-->
+							<h4 th:text = "Name + ': ' + ${candidate.firstName} + ' ' + ${candidate.lastName}"></h4>
+							<h4 th:text = "Email + ': ' +  ${candidate.email}"></h4>
+							<!--Display the date the application was made-->
+							<h4 th:text = "Applied + ': ' + ${candidate.application.creationDate}"></h4>
+							<!--Display hourly rate-->
+							<h4 th:text = "Hourly + ' Rate' + ': ' + &#8364; + ${candidate.hourlyRate}" ></h4>
+						</div>
+						<div class = "col-sm-12 col-md-6">
+							<h2 th:text = "Status + ': ' + ${candidate.application.status.statusType}"></h2>
+							<h3 th:text = "Assigned + ' to' + ' AdminId' + ': ' + ${candidate.application.admin.adminId}"></h3>
+						</div>
+					</div>
+				</div>
+			</div>
+	<!--Footer-->
+	<div th:insert="fragments :: footer"></div>
+	<!--JavaScript Scripts-->
+	<div th:insert="fragments :: jsScripts"></div>
+</body>
+</html>
