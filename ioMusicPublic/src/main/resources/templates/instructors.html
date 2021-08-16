@@ -150,12 +150,15 @@
 				</th:block>
 				<!--Pagination Area-->
 				<ul class = "pagination">
+					<li th:if = "${currentPage-2 >= 0 }">
+						<a th:text = "${currentPage-1}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-2}"></a>
+					</li>
 					<li th:if = "${currentPage-1 >= 0 }">
-						<a th:text = "Prev" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
+						<a th:text = "${currentPage}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
 					</li>
 					<li th:text = "${currentPage + 1}"></li>
 					<li th:if = "${currentPage + 1 < pageAmount}">
-						<a th:text = "Next" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
+						<a th:text = "${currentPage + 2}" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
 					</li>
 				</ul>
 			</div>
