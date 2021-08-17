@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="headElement">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CDNs-->
+<!-- Bootstrap CSS-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<!--FontAwesome-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!--External CSS File-->
+<link th:href="@{/css/style.css}" href = "/css/style.css" rel="stylesheet">
+<title>Instructor Registration Form</title>
+</head>
+<body>
+	<!--Navigation Bar for the pages-->
+	<div id="navBar" th:fragment="navBar">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#"><i class="fas fa-music"></i></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#links" aria-controls="links" aria-expanded="false"	aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+				<div class="collapse navbar-collapse" id="links">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+						<li sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole != 'admin'}" class="nav-item"><a class="nav-link" th:href="@{/viewInstructors?pageNumber=0}">Instructors</a></li>
+						<!--Admin Instructors Options-->		
+						<li class="nav-item dropdown" sec:authorize="isAuthenticated()" th:if = "${#authentication.getPrincipal().getRole == 'admin'}">
+	        				<a class="nav-link dropdown-toggle" href="#" id="instructorDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+		        				<sup th:if = "${amount>0}" class = "navBarNotification" th:text = "${amount}"></sup>
+		        				<span>Instructors</span>
+	        				</a>
+	          				<div class="dropdown-menu" aria-labelledby="instructorDropdown">
+	          					<a class="dropdown-item" th:href="@{/viewInstructors?pageNumber=0}">View Instructors</a>
+	          					<a class="dropdown-item" th:href="@{/admin/viewInstructorCandidates}">
+	          						<span th:if = "${amount>0}" class = "navBarNotification" th:text = "${amount}"></span>
+	          						<span>View Candidates</span>
+	          					</a>
+	        				</div>
+	      				</li>
+					</ul>
+					<!--Personalised Greeting if user is logged in-->
+					<span sec:authorize="isAuthenticated()" class="navbar-text navbarGreeting" th:text ="Hello + ' ' + ${#authentication.getPrincipal().getFirstName()} + ' '">Welcome to I/O Music</span>
+					<!--Generic Greeting if user is logged in-->
+					<span sec:authorize="isAnonymous()" class="navbar-text navbarGreeting">Welcome to I/O Music</span>
+					<ul class ="navbar-nav ml-auto">		
+						<!--Login Options if user is not logged in-->		
+						<li class="nav-item dropdown" sec:authorize="isAnonymous()">
+	        				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+	          					Login
+	        				</a>
+	          				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	          					<a class="dropdown-item" th:href="@{/student/login}">Student Login</a>
+	          					<a class="dropdown-item" th:href="@{/instructor/login}">Instructor Login</a>
+	          					<a class="dropdown-item" th:href="@{/admin/login}">Admin Login</a>
+	        				</div>
+	      				</li>
+	      				<!--Edit profile button if the logged in user is a instructor-->
+	      				<li sec:authorize="isAuthenticated()" class="nav-item dropdown" th:if = "${#authentication.getPrincipal().getRole == 'instructor'}">
+	      					<a class="nav-link dropdown-toggle" href="#" id="editDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+	          					My Profile
+	        				</a>
+	        				<div class="dropdown-menu" aria-labelledby="editDropdown">
+	        					<a class="dropdown-item" th:href="@{/myProfile}">View Profile</a>
+	        					<a class="dropdown-item" th:href="@{/editProfile/description}">Change Description</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/email}">Change Email</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/rate}">Change Hourly Rate</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/password}">Change Password</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/videoPlatform}">Change Video Platforms</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/artist}">Change Favourite Artists</a>
+	          					<a class="dropdown-item" th:href="@{/editProfile/photo}">Upload Profile Picture</a>
+	        				</div>
+	      				</li>
+	      				<!--View Requests Button if user is logged in and is not a instructor candidate-->
+	      				<li sec:authorize="isAuthenticated()" class="nav-item" th:unless = "${#authentication.getPrincipal().getRole == 'candidate'}">
+	      					<a class="nav-link" th:href="@{/lessonRequests}">
+	      						<sup th:if = "${amount>0}" th:unless = "${#authentication.getPrincipal().getRole == 'admin'}" class = "navBarNotification" th:text = "${amount}" ></sup>
+	          					<span>View Requests</span>
+	      					</a>
+	      				</li>
+	      				<li sec:authorize="isAuthenticated()" class="nav-item" th:if = "${#authentication.getPrincipal().getRole == 'candidate'}"><a class="nav-link" th:href="@{/candidate/viewApplication}">View Application</a></li>
+	      				<!--Register button if user is not logged in-->
+						<li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/register}">Register</a></li>
+					</ul>
+					<!--Logout Button if user is logged in-->
+	      			<form class="form-inline" action = "/logout" method="post">
+	      				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+	      				<button sec:authorize="isAuthenticated()" class="logoutBtn" type="submit">Logout</button>
+	      			</form>
+				</div>
+		</nav>
+	</div>
+	<div id="jsScripts" th:fragment="jsScripts">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+		<script th:src="@{/js/scripts.js}"></script>
+	</div>
+</body>

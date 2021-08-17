@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragments :: headElement">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include="bootstrap4Fragments :: headElement">
 <title>Instructor Registration Form</title>
 </head>
 <body onload = "populateForm()" class = "registrationForm">
-	<!--Navigation Bar-->
-	<div th:insert="fragments :: navBar"></div>
+	<div th:insert="bootstrap4Fragments :: navBar"></div>	
 	<p th:text = "${message}" class="noBannerImageMessage"></p>
 	<!--Container for the form-->
 	<div class="formWrap">
@@ -77,7 +76,7 @@
 				</div>
 				<!--If there are instruments in the repo display them-->
 				<div th:unless = "${instrumentList =='emptyRepo'}">
-					<select class="form-control" id="candidateInstruments" th:field = "*{instrumentList}" required multiple>
+					<select class="selectpicker" data-live-search="true" id="candidateInstruments" th:field = "*{instrumentList}" required multiple>
 						<th:block th:each = "instrument: ${instrumentList}">
 							<option th:text = "${instrument.name}" th:value = "${instrument.instrumentId}"/>
 						</th:block>
@@ -98,7 +97,7 @@
 				</div>
 				<!--If there are artists in the repo display them-->
 				<div th:unless = "${artistList =='emptyRepo'}">
-					<select class="form-control" id="candidateArtists" th:field = "*{artistList}" required multiple>
+					<select class="selectpicker" data-live-search="true" id="candidateArtists" th:field = "*{artistList}" required multiple>
 						<th:block th:each = "artist: ${artistList}">
 							<option th:text = "${artist.artistName}" th:value = "${artist.artistId}"/>
 						</th:block>
@@ -118,7 +117,7 @@
 					</a>
 				</div>
 				<div th:unless = "${videoToolList == 'emptyRepo'}">
-					<select class="form-control" id="candidateVideoTools" th:field = "*{videoToolList}" required multiple>
+					<select class="selectpicker" data-live-search="true" id="candidateVideoTools" th:field = "*{videoToolList}" required multiple>
 						<th:block th:each = "videoTool: ${videoToolList}">
 							<option th:text = "${videoTool.name}" th:value = "${videoTool.videoToolId}"/>
 						</th:block>
@@ -147,6 +146,7 @@
 	<!--Footer-->
 	<div th:insert = "fragments :: footer"></div>
 	<!--JavaScript Scripts-->
-	<div th:insert = "fragments :: jsScripts"></div>
+	<div th:insert = "bootstrap4Fragments :: jsScripts"></div>
+
 </body>
 </html>
