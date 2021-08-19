@@ -15,7 +15,7 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long>{
 	Instructor findByEmail(String emailAddress);
 	
 	//The method below will allow an instructor to be searched for using the search bar
-	@Query("SELECT i from Instructor i WHERE i.firstName LIKE %:query% OR i.lastName LIKE %:query%")
+	@Query("SELECT i from Instructor i WHERE (i.firstName LIKE %:query%) OR (i.lastName LIKE %:query%)")
 	List<Instructor> searchByQuery(String query);
 	
 	//The method below will count how many instructors there are

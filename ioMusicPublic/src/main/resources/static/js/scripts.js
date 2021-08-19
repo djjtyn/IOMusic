@@ -111,15 +111,19 @@ $(document).ready(function() {
 	//***Instructor FIltering***/
 	//Code below will allow the instructor search functionality to be invoked when the enter key is pressed
 	$("#searchQuery").keypress(function(key){
-		if(key.keyCode == 13)
-		//Remove the select input if the user is searching using the search bar
-		$("#filterInstrument").remove();
-		$("#filterInstructorForm").submit();
+		if(key.keyCode == 13){
+			//Remove the select input if the user is searching using the search bar
+			$("#filterInstrument").remove();
+			$("#filterInstructorForm").submit();
+		}
 	})
 	//Code below will allow the instructor instrument filter form to be submitted when a instrument is selected
 	$("#filterInstrument").on("change", function(){
-		$("#searchQuery").remove();
 		$("#filterInstructorForm").submit();
+	})
+	//Code below will display the loading gif when the filter form is submitted
+	$("#filterInstructorForm").on("submit", function(){
+		$(".loadingArea").css("display", "block");
 	})
 });
 

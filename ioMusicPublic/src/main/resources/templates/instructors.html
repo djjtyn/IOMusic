@@ -18,12 +18,17 @@
 			<input type = "text" placeholder = "Search for an Instructor" id = "searchQuery" name = "searchQuery"/>
 			</div>
 			<div class = "form-group"> 
-			<p>Filter by Instrument</p>
-			<select class="selectpicker" data-live-search="true" id="filterInstrument" name = "filterInstrumentId">
-				<th:block th:each = "instrument: ${instruments}">
-					<option th:text = "${instrument.name}" th:value = "${instrument.instrumentId}"/>
-				</th:block>
-			</select>
+				<p>Filter by Instrument</p>
+				<select class="selectpicker" data-live-search="true" id="filterInstrument" name = "filterInstrumentId">
+					<option selected disabled>Instruments</option>
+					<th:block th:each = "instrument: ${instruments}">
+						<option th:text = "${instrument.name}" th:value = "${instrument.instrumentId}"/>
+					</th:block>
+				</select>
+			</div>
+			<div class = "loadingArea">
+				<img th:src="@{/images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+				<h6>Loading</h6>
 			</div>
 		</form>
 	</div>
@@ -159,7 +164,7 @@
 					</div>
 				</th:block>
 				<!--Pagination Area-->
-				<th:block th:if = "${currentPage}" >
+				<th:block th:if = "${currentPage != null}" >
 					<ul class = "pagination">
 						<li th:if = "${currentPage-2 >= 0 }">
 							<a th:text = "${currentPage-1}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-2}"></a>

@@ -18,5 +18,8 @@ public interface InstructorInstrumentRepository extends JpaRepository<Instructor
 	//This method will get all the instruments listed for instructors
 	@Query(value = "SELECT DISTINCT instrumentId FROM InstructorInstrument", nativeQuery = true)
 	List<Short> getAllInstruments();
-
+	
+	//Select all instructors that match the given instrument id
+	@Query(value = "SELECT instructorId FROM InstructorInstrument WHERE instrumentId = ?1", nativeQuery = true)
+	List<Long> getInstructorIdForInstrument(Long instrumentId);
 }

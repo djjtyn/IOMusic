@@ -191,9 +191,9 @@ public class GenericController {
 	///***View Instructors**
 	//The method below will display the page listing the instructors
 	@GetMapping("/viewInstructors")
-	public String viewInstructors(Model model, Optional<String> searchQuery, @RequestParam Optional<Integer> pageNumber) {
+	public String viewInstructors(Model model, @RequestParam Optional<Integer> pageNumber) {
 		//Show 3 instructors per page
-		int instructorsPerPage = 2;
+		int instructorsPerPage = 5;
 		int maximumPage;
 		Page<Instructor> instructors = instructorRepo.findAll(PageRequest.of(pageNumber.orElse(1),instructorsPerPage));
 		long amountOfInstructors = instructorRepo.count();
@@ -226,11 +226,28 @@ public class GenericController {
 	
 	//The method below will allow users to search for an instructor
 	@PostMapping("viewInstructors")
-	public String applySearchFilter(Model model, @RequestParam("searchQuery") String searchQuery, @RequestParam("filterInstrumentId") Long instrumentId) {
-		System.out.println(instrumentId);
-		List<Instructor> instructors = instructorRepo.searchByQuery(searchQuery);
-		int matchAmount = instructors.size();
+	public String applySearchFilter(Model model, @RequestParam("searchQuery") Optional<String> searchQuery, @RequestParam("filterInstrumentId") Optional<Long> instrumentId) {
 		String message;
+		String instrumentName = "";
+		List<Instructor> instructors = new ArrayList<>();
+		int matchAmount;
+		List<Instrument> instruments = new ArrayList<>();
+		List<Short> instrumentIds = instructorInstrumentRepo.getAllInstruments();
+		for(Short id: instrumentIds) {
+			instruments.add(instrumentRepo.getById(id));
+		}
+		model.addAttribute("instruments", instruments);
+		//If the user provides an instructor name to search with
+		if(searchQuery.isPresent() && !searchQuery.get().equals("")) {
+			System.out.println("Test: " + searchQuery.get());
+			 instructors = instructorRepo.searchByQuery(searchQuery.get());
+		} else if(instrumentId.isPresent()){
+			//Get the instructor id's which have that instrument listed, traverse the list and for each loop value get the matching instructor id instance
+			for(Long instructorId: instructorInstrumentRepo.getInstructorIdForInstrument(instrumentId.get())) {
+				instructors.add(instructorRepo.getById(instructorId));
+			}	
+		}
+		matchAmount = instructors.size();
 		//If a match has been found
 		if(matchAmount > 0) {
 			model.addAttribute("instructors", instructors);
