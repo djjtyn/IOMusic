@@ -27,6 +27,7 @@ import ioMusicPublic.authentication.instructor.CandidateDetails;
 import ioMusicPublic.authentication.instructor.InstructorDetails;
 import ioMusicPublic.authentication.student.StudentDetails;
 import ioMusicPublic.models.Comment;
+import ioMusicPublic.models.Instrument;
 import ioMusicPublic.models.Student;
 import ioMusicPublic.models.instructor.Instructor;
 import ioMusicPublic.models.instructorCandidate.InstructorCandidate;
@@ -209,6 +210,12 @@ public class GenericController {
 		if(instructors.isEmpty()) {
 			model.addAttribute("instructors", "emptyRepo");
 		} else {
+			List<Instrument> instruments = new ArrayList<>();
+			List<Short> instrumentIds = instructorInstrumentRepo.getAllInstruments();
+			for(Short id: instrumentIds) {
+				instruments.add(instrumentRepo.getById(id));
+			}
+			model.addAttribute("instruments", instruments);
 			model.addAttribute("instructors", instructors);
 			model.addAttribute("pageAmount", maximumPage);
 			model.addAttribute("currentPage", pageNumber.get());
@@ -219,7 +226,8 @@ public class GenericController {
 	
 	//The method below will allow users to search for an instructor
 	@PostMapping("viewInstructors")
-	public String applySearchFilter(Model model, @RequestParam("searchQuery") String searchQuery, RedirectAttributes attributes) {
+	public String applySearchFilter(Model model, @RequestParam("searchQuery") String searchQuery, @RequestParam("filterInstrumentId") Long instrumentId) {
+		System.out.println(instrumentId);
 		List<Instructor> instructors = instructorRepo.searchByQuery(searchQuery);
 		int matchAmount = instructors.size();
 		String message;
@@ -233,8 +241,6 @@ public class GenericController {
 			}
 		} else {
 			message = "No matches found for your search";
-			attributes.addFlashAttribute("searchResult", message);
-			return "redirect:/viewInstructors";
 		}
 		model.addAttribute("searchResult", message);
 		setUserNotifications(model);

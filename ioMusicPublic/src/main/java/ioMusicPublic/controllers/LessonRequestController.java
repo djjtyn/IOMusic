@@ -67,19 +67,18 @@ public class LessonRequestController {
 	@Autowired
 	CandidateApplicationRepository applicationRepo;
 	
-	
-	////If the user is an admin, the method below will display how many candidate applications they have as Pending Approval
 	public void setUserNotifications(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null) {
 			String role = authentication.getAuthorities().toString();
+			//If the user is an admin, display how many candidate applications they have as Pending Approval
 			if(role.equals("[admin]")) {
 				Long amount = applicationRepo.countApplicationsPendingApproval();
 				System.out.println(amount);
 				model.addAttribute("amount", amount);
 			}
 			if(role.equals("[student]")) {
-				//Get how many lesson requests need actioning for the logged in student using their studentId
+				//If the user is a student, display how many lesson requests need actioning for the logged in student using their studentId
 				StudentDetails details = (StudentDetails) authentication.getPrincipal();
 				long studentId = details.getStudentId();
 				Long amount = requestRepo.countRequestsRequiringStudentAction(studentId);
@@ -88,7 +87,7 @@ public class LessonRequestController {
 				}
 			}
 			if(role.equals("[instructor]")) {
-				//Get how many lesson requests need actioning for the logged in instructor using their id
+				//If the user is a instructor display how many lesson requests need actioning for the logged in instructor using their id
 				InstructorDetails details = (InstructorDetails) authentication.getPrincipal();
 				long instructorId = details.getInstructorId();
 				Long amount = requestRepo.countRequestsRequiringInstructorAction(instructorId);
@@ -104,9 +103,6 @@ public class LessonRequestController {
 		try {
 			//Get the logged in student's details
 			StudentDetails details = (StudentDetails) auth.getPrincipal();
-			long studentId = details.getStudentId();
-			Student student = studentRepo.getById(studentId);
-			model.addAttribute("student", student);
 			//Get the instructor details and add to the model
 			Instructor instructor = instructorRepo.getById(id);
 			model.addAttribute("instructor", instructor);

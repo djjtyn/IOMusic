@@ -123,96 +123,108 @@ public class AdminController {
 
 	// The method below will allow an admin to approve an instructor candidate
 	@GetMapping("/admin/instructorCandidate/approve/{candidateId}")
-	public String approveCandidate(@PathVariable("candidateId") Integer id, RedirectAttributes attributes) {
-		String message;
-		try {
-			// Create an new Instructor instance
-			Instructor instructor = new Instructor();
-			// Get the approved candidate
-			InstructorCandidate candidate = candidateRepo.getById(id);
-			// Get the candidates application
-			CandidateApplication application = candidate.getApplication();
-			// Set instructor first name
-			instructor.setFirstName(candidate.getFirstName());
-			// Set instructor last name
-			instructor.setLastName(candidate.getLastName());
-			// Set instructor password
-			instructor.setPassword(candidate.getPassword());
-			// Set instructor email
-			instructor.setEmail(candidate.getEmail());
-			// Set instructor description
-			instructor.setDescription(candidate.getDescription());
-			// Set instructor hourly rate
-			instructor.setHourlyRate(candidate.getHourlyRate());
-			// Set instructor Genre
-			instructor.setGenreId(candidate.getGenreId());
-			// Set instructor time zone
-			instructor.setUserTimeZone(candidate.getUserTimeZone());
-			instructorRepo.save(instructor);
-			// The arraylist's below will be used to map records from the InstructorFavouriteArtist, InstructorVideoTools and InstructorInstrument to the Instructor
-			List<InstructorVideoTools> videoToolsList = new ArrayList<>();
-			List<InstructorFavouriteArtist> artistList = new ArrayList<>();
-			List<InstructorInstrument> instrumentList = new ArrayList<>();
-			// Set instructor video tools
-			for (CandidateVideoTools videoTool : candidate.getVideoTools()) {
-				// Create a new InstructorVideoTools instance
-				InstructorVideoTools instructorVideoTools = new InstructorVideoTools();
-				instructorVideoTools.setVideoTool(videoTool.getVideoTool());
-				instructorVideoTools.setInstructor(instructor);
-				videoToolsList.add(instructorVideoTools);
-				// Add the record to the instructorVideoTools repo and remove from the CandidateVideoTools repo
-				instructorVideoToolsRepo.save(instructorVideoTools);
-				candidateVideoToolsRepo.delete(videoTool);
+	public String approveCandidate(@PathVariable("candidateId") Integer id, Authentication auth, RedirectAttributes attributes) {
+		//Check that the user is a logged in admin
+		String role = auth.getAuthorities().toString();
+		if(role.equals("[admin]")) {
+			String message;
+			try {
+				// Create an new Instructor instance
+				Instructor instructor = new Instructor();
+				// Get the approved candidate
+				InstructorCandidate candidate = candidateRepo.getById(id);
+				// Get the candidates application
+				CandidateApplication application = candidate.getApplication();
+				// Set instructor first name
+				instructor.setFirstName(candidate.getFirstName());
+				// Set instructor last name
+				instructor.setLastName(candidate.getLastName());
+				// Set instructor password
+				instructor.setPassword(candidate.getPassword());
+				// Set instructor email
+				instructor.setEmail(candidate.getEmail());
+				// Set instructor description
+				instructor.setDescription(candidate.getDescription());
+				// Set instructor hourly rate
+				instructor.setHourlyRate(candidate.getHourlyRate());
+				// Set instructor Genre
+				instructor.setGenreId(candidate.getGenreId());
+				// Set instructor time zone
+				instructor.setUserTimeZone(candidate.getUserTimeZone());
+				instructorRepo.save(instructor);
+				// The arraylist's below will be used to map records from the InstructorFavouriteArtist, InstructorVideoTools and InstructorInstrument to the Instructor
+				List<InstructorVideoTools> videoToolsList = new ArrayList<>();
+				List<InstructorFavouriteArtist> artistList = new ArrayList<>();
+				List<InstructorInstrument> instrumentList = new ArrayList<>();
+				// Set instructor video tools
+				for (CandidateVideoTools videoTool : candidate.getVideoTools()) {
+					// Create a new InstructorVideoTools instance
+					InstructorVideoTools instructorVideoTools = new InstructorVideoTools();
+					instructorVideoTools.setVideoTool(videoTool.getVideoTool());
+					instructorVideoTools.setInstructor(instructor);
+					videoToolsList.add(instructorVideoTools);
+					// Add the record to the instructorVideoTools repo and remove from the CandidateVideoTools repo
+					instructorVideoToolsRepo.save(instructorVideoTools);
+					candidateVideoToolsRepo.delete(videoTool);
+				}
+				instructor.setVideoTools(videoToolsList);
+				// Set instructor favourite artist
+				for (CandidateFavouriteArtist artist : candidate.getFavouriteArtists()) {
+					// Create a new InstructorFavouriteArtist instance
+					InstructorFavouriteArtist favouriteArtists = new InstructorFavouriteArtist();
+					favouriteArtists.setArtist(artist.getArtist());
+					favouriteArtists.setInstructor(instructor);
+					artistList.add(favouriteArtists);
+					// Add the record to the instructorFavouriteArtist repo and remove from the CandidateFavouriteArtist repo
+					instructorFavouriteArtistRepo.save(favouriteArtists);
+					candidateFavouriteArtistRepo.delete(artist);
+				}
+				instructor.setFavouriteArtists(artistList);
+				// Set instructor instruments
+				for (CandidateInstrument instrument : candidate.getInstruments()) {
+					// Create a new InstructorInstrument instance
+					InstructorInstrument instruments = new InstructorInstrument();
+					instruments.setInstrument(instrument.getInstrument());
+					instruments.setInstructor(instructor);
+					instrumentList.add(instruments);
+					// Add the record to the instructorInstrument repo and remove from the CandidateInstrument repo
+					instructorInstrumentRepo.save(instruments);
+					candidateInstrumentRepo.delete(instrument);
+				}
+				instructor.setInstruments(instrumentList);
+				// Remove the application from the application repo
+				candidateApplicationRepo.delete(application);
+				// Remove the candidate from the candidate repo
+				candidateRepo.delete(candidate);
+				message = "You have successfully approved " + instructor.getFirstName();
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "There was an issue approving this candidate";
 			}
-			instructor.setVideoTools(videoToolsList);
-			// Set instructor favourite artist
-			for (CandidateFavouriteArtist artist : candidate.getFavouriteArtists()) {
-				// Create a new InstructorFavouriteArtist instance
-				InstructorFavouriteArtist favouriteArtists = new InstructorFavouriteArtist();
-				favouriteArtists.setArtist(artist.getArtist());
-				favouriteArtists.setInstructor(instructor);
-				artistList.add(favouriteArtists);
-				// Add the record to the instructorFavouriteArtist repo and remove from the CandidateFavouriteArtist repo
-				instructorFavouriteArtistRepo.save(favouriteArtists);
-				candidateFavouriteArtistRepo.delete(artist);
-			}
-			instructor.setFavouriteArtists(artistList);
-			// Set instructor instruments
-			for (CandidateInstrument instrument : candidate.getInstruments()) {
-				// Create a new InstructorInstrument instance
-				InstructorInstrument instruments = new InstructorInstrument();
-				instruments.setInstrument(instrument.getInstrument());
-				instruments.setInstructor(instructor);
-				instrumentList.add(instruments);
-				// Add the record to the instructorInstrument repo and remove from the CandidateInstrument repo
-				instructorInstrumentRepo.save(instruments);
-				candidateInstrumentRepo.delete(instrument);
-			}
-			instructor.setInstruments(instrumentList);
-			// Remove the application from the application repo
-			candidateApplicationRepo.delete(application);
-			// Remove the candidate from the candidate repo
-			candidateRepo.delete(candidate);
-			message = "You have successfully approved " + instructor.getFirstName();
-		} catch (Exception e) {
-			e.printStackTrace();
-			message = "There was an issue approving this candidate";
+			attributes.addFlashAttribute("message", message);
+			return "redirect:/admin/viewInstructorCandidates";
+		}else {
+			return "error";
 		}
-		attributes.addFlashAttribute("message", message);
-		return "redirect:/admin/viewInstructorCandidates";
 	}
 
 	// The method below will allow an admin to decline an instructor candidate
 	@GetMapping("/admin/instructorCandidate/decline/{candidateId}")
-	public String declineCandidate(@PathVariable("candidateId") Integer id, RedirectAttributes attributes) {
-		// Find the candidates application
-		CandidateApplication application = candidateApplicationRepo.getByCandidate(candidateRepo.getById(id));
-		// Change the application status to declined
-		application.setStatus(statusRepo.getById((short) 3));
-		candidateApplicationRepo.save(application);
-		String message = "You have declined " + application.getCandidate().getFirstName() + "'s application";
-		attributes.addFlashAttribute("message", message);
-		return "redirect:/admin/viewInstructorCandidates";
+	public String declineCandidate(@PathVariable("candidateId") Integer id, Authentication auth, RedirectAttributes attributes) {
+		//Check that the user is a logged in admin
+		String role = auth.getAuthorities().toString();
+		if(role.equals("[admin]")) {
+			// Find the candidates application
+			CandidateApplication application = candidateApplicationRepo.getByCandidate(candidateRepo.getById(id));
+			// Change the application status to declined
+			application.setStatus(statusRepo.getById((short) 3));
+			candidateApplicationRepo.save(application);
+			String message = "You have declined " + application.getCandidate().getFirstName() + "'s application";
+			attributes.addFlashAttribute("message", message);
+			return "redirect:/admin/viewInstructorCandidates";
+		}else {
+			return "error";
+		}
 	}
 	
 	//The method below will allow an admin to delete an instructors comment
@@ -220,12 +232,11 @@ public class AdminController {
 	public String deleteComment(Authentication auth, @PathVariable("commentId") Short commentId, RedirectAttributes attributes) {
 		//Only allow if the logged in user is an admin
 		String message;
-		//Check that the user is a logged in student
+		//Check that the user is a logged in admin
 		String role = auth.getAuthorities().toString();
 		Comment comment = commentRepo.getById(commentId);
 		//Get the instructor Id to redirect back to the instructors profile
 		Long instructorId = comment.getInstructor().getInstructorId();
-		//If the user is a student, get their details, the instructors details and the comment they posted to create a Comment instance
 		if(role.equals("[admin]")) {
 			try {
 				commentRepo.delete(comment);	

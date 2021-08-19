@@ -5,31 +5,90 @@
 </head>
 <body>
 	<!--Navigation Bar-->
-	<div th:insert = "fragments :: navBar"></div>
+	<div th:insert="fragments :: navBar"></div>
 	<h1 class="text-center m-5">View Application</h1>
-	<h2 class = "text-center">Your application details are shown below</h2>
-	<div class = "container-fluid">
-			<div class = "candidateWrapper">
-					<div class = "row candidateRow">
-						<div class = "col-sm-12 col-md-6">
-							<!--Display applicant name-->
-							<h4 th:text = "Name + ': ' + ${candidate.firstName} + ' ' + ${candidate.lastName}"></h4>
-							<h4 th:text = "Email + ': ' +  ${candidate.email}"></h4>
-							<!--Display the date the application was made-->
-							<h4 th:text = "Applied + ': ' + ${candidate.application.creationDate}"></h4>
-							<!--Display hourly rate-->
-							<h4 th:text = "Hourly + ' Rate' + ': ' + &#8364; + ${candidate.hourlyRate}" ></h4>
-						</div>
-						<div class = "col-sm-12 col-md-6">
-							<h2 th:text = "Status + ': ' + ${candidate.application.status.statusType}"></h2>
-							<h3 th:text = "Assigned + ' to' + ' AdminId' + ': ' + ${candidate.application.admin.adminId}"></h3>
-						</div>
+	<h2 class="text-center">Your application details are shown below</h2>
+	<div class="container-fluid">
+		<div class="candidateRow">
+			<div class="row">
+				<div class="col-sm-12 candidateStatus">
+					<h2
+						th:text="Status + ': ' + ${candidate.application.status.statusType}"></h2>
+					<h3
+						th:text="Assigned + ' to' + ' AdminId' + ': ' + ${candidate.application.admin.adminId}"></h3>
+				</div>
+			</div>
+			<div class="candidateDetails">
+				<div class="row">
+					<div class="col-sm-12 col-md-4">
+						<!--Display applicant name-->
+						<p
+							th:text="Name + ': ' + ${candidate.firstName} + ' ' + ${candidate.lastName}"></p>
+						<p th:text="Email + ': ' +  ${candidate.email}"></p>
+						<!--Display the date the application was made-->
+						<p
+							th:text="Applied + ': ' + ${candidate.application.creationDate}"></p>
+						<!--Display hourly rate-->
+						<p
+							th:text="'Hourly' + ' Rate' + ': ' + &#8364; + ${candidate.hourlyRate}"></p>
+					</div>
+					<div class="col-sm-12 col-md-4">
+						<p class="instructorDescription"
+							th:text="${candidate.description}"></p>
+					</div>
+					<div class="col-sm-12 col-md-4">
+						<!--Display Genre-->
+						<span class="font-weight-bold">Genre:</span> <span
+							th:text="${candidate.genreId.genreName}"></span> <br>
+						<th:block th:if="${candidate.videoTools.size()==1}">
+							<p class="font-weight-bold">Video Tool:</p>
+							<span th:text="${candidate.videoTools.get(0).videoTool.name}"></span>
+							<br>
+						</th:block>
+						<th:block th:if="${candidate.videoTools.size()>1}">
+							<ul>
+								<li class="font-weight-bold">Video Tools</li>
+								<th:block th:each="videoTool: ${candidate.videoTools}">
+									<li th:text="${videoTool.videoTool.name}"></li>
+								</th:block>
+							</ul>
+						</th:block>
+						<th:block th:if="${candidate.instruments.size()==1}">
+							<span class="font-weight-bold">Instrument: </span>
+							<span th:text="${candidate.instruments.get(0).instrument.name}"></span>
+							<br>
+						</th:block>
+						<th:block th:if="${candidate.instruments.size()>1}">
+							<ul>
+								<li class="font-weight-bold">Instruments</li>
+								<th:block th:each="instrument: ${candidate.instruments}">
+									<li th:text="${instrument.instrument.name}"></li>
+								</th:block>
+							</ul>
+						</th:block>
+						<th:block th:if="${candidate.favouriteArtists.size()==1}">
+							<span class="font-weight-bold">Favourite Artist: </span>
+							<span
+								th:text="${candidate.favouriteArtists.get(0).artist.artistName}"></span>
+							<br>
+						</th:block>
+						<th:block th:if="${candidate.favouriteArtists.size()>1}">
+							<ul>
+								<li class="font-weight-bold">Favourite Artists</li>
+								<th:block th:each="artist: ${candidate.favouriteArtists}">
+									<li th:text="${artist.artist.artistName}"></li>
+								</th:block>
+							</ul>
+						</th:block>
 					</div>
 				</div>
 			</div>
-	<!--Footer-->
-	<div th:insert="fragments :: footer"></div>
-	<!--JavaScript Scripts-->
-	<div th:insert="fragments :: jsScripts"></div>
+		</div>
+		<!--Footer-->
+		<div class = "row">
+			<div th:insert="fragments :: footer"></div>
+		</div>
+		<!--JavaScript Scripts-->
+		<div th:insert="fragments :: jsScripts"></div>
 </body>
 </html>

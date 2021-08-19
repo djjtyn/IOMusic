@@ -8,6 +8,7 @@
 body{
 	margin:0;
 	padding:0;
+	height:100%;
 }
 
 nav {
@@ -49,11 +50,18 @@ nav {
 }
 
 #footer {
-	position:relative;
+	position:fixed;
 	bottom:0;
 	width:100%;
 	text-align:center;
+	background-color:#343a40;
+	color:green;
+	height:1.5em	
 } /*Centers the page footer at the bottom of the page*/
+
+#footer h6 {
+	line-height:1.5em;
+} /*positions the footer text vertical middle*/
 
 .imgArea{
 	position:relative;
@@ -126,6 +134,7 @@ nav {
 	text-align:center;
 	width:100%;
 	top:1em;
+	padding:1em;
 	background-color:black;
 	color:red;
 }
@@ -139,12 +148,14 @@ nav {
 }
 /*Forms*/
 .formWrap {
+	position:relative;
+	top:25%;
 	background-color:black;
 	opacity:0.9;
 	color:white;
 	padding:0em 1em 2em 1em;
 	text-align:center;
-	border-radius:.5em;
+	border-radius:1em;
 	font-size:1.1em;
 }/*This class is for the form wrappers*/
 
@@ -552,6 +563,7 @@ nav {
 
 .validButton {
 	background-color:green;
+	color:white;
 	cursor: pointer;
 }
 
@@ -580,8 +592,10 @@ nav {
 
 /*Error Page*/
 .errorWrap {
+	position:absolute;
+	top:25%;
 	width:100%;
-	margin: 25% 0;
+	padding:1em;
 	text-align:center;
 }
 
@@ -603,6 +617,26 @@ nav {
 	height:5em;
 	width:auto;
 	border-radius:1em;
+}
+
+/*Page that displays an instructor candidates application to the candidate*/
+.candidateStatus h2,
+.candidateStatus h3 {
+	font-size:3em;
+}
+
+.candidateStatus h2 {
+	text-decoration:underline;
+}
+
+.candidateDetails{
+	font-size:2em;
+	margin:1em;
+	padding:.5em;
+}
+
+.candidateDetails ul {
+	list-style:none;
 }
 
 

@@ -101,10 +101,25 @@ $(document).ready(function() {
 		})
 		$(".listSelected").text("Your favourite artists will now be listed as:" + selected);	
 	})
+	
 	//***LOADING SCREEN***
 	//Code below will show the loading gif when the page needs to load
 	$(".loadFormButton").on("click", function (){
 		$(".loadingArea").css("display", "block");
+	})
+	
+	//***Instructor FIltering***/
+	//Code below will allow the instructor search functionality to be invoked when the enter key is pressed
+	$("#searchQuery").keypress(function(key){
+		if(key.keyCode == 13)
+		//Remove the select input if the user is searching using the search bar
+		$("#filterInstrument").remove();
+		$("#filterInstructorForm").submit();
+	})
+	//Code below will allow the instructor instrument filter form to be submitted when a instrument is selected
+	$("#filterInstrument").on("change", function(){
+		$("#searchQuery").remove();
+		$("#filterInstructorForm").submit();
 	})
 });
 

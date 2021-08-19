@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:include="fragments :: headElement">
+<head th:include="bootstrap4Fragments :: headElement">
 <title>View Instructors</title>
 </head>
 <body>
 	<!--Navigation Bar-->
-	<div th:insert="fragments :: navBar"></div>
+	<div th:insert="bootstrap4Fragments :: navBar"></div>
 	<div class="imgArea">
 		<p th:text="${searchResult}" class="pageMessage"></p>
 		<h1 class="pageHeading">Instructors</h1>
 		<img th:src="@{/images/musicians.jpg}" alt="hiddenMusicians" class="pageBannerImg">
-		<form class = "searchForm" method = "post" action = "viewInstructors">
+		<form class = "searchForm" method = "post" id = "filterInstructorForm" action = "viewInstructors">
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<div class = "form-group">
 			<i class="fas fa-search"></i>
-			<input type = "text" placeholder = "Search for an Instructor" name = "searchQuery"/>
+			<input type = "text" placeholder = "Search for an Instructor" id = "searchQuery" name = "searchQuery"/>
+			</div>
+			<div class = "form-group"> 
+			<p>Filter by Instrument</p>
+			<select class="selectpicker" data-live-search="true" id="filterInstrument" name = "filterInstrumentId">
+				<th:block th:each = "instrument: ${instruments}">
+					<option th:text = "${instrument.name}" th:value = "${instrument.instrumentId}"/>
+				</th:block>
+			</select>
+			</div>
 		</form>
 	</div>
 	<div class="container-fluid">
@@ -39,8 +49,7 @@
 							</div>
 							<!--This is the area for the instructors description-->
 							<div class="col-sm-12 col-md-4">
-								<p class="instructorDescription"
-									th:text="${instructor.description}"></p>
+								<p class="instructorDescription" th:text="${instructor.description}"></p>
 							</div>
 							<!--This is the area for the instructors preferences-->
 							<div class="col-sm-12 col-md-4 text-center">
@@ -48,8 +57,9 @@
 								<span class="font-weight-bold">Hourly Rate:</span><span
 									th:text="&#8364; + ${instructor.hourlyRate}"></span> <br>
 								<!--Display Genre-->
-								<span class="font-weight-bold">Genre:</span><span
-									th:text="${instructor.genreId.genreName}"></span> <br>
+								<span class="font-weight-bold">Genre:</span>
+								<span th:text="${instructor.genreId.genreName}"></span> 
+								<br>
 								<!--Display each instructors videoTools(If only one display in a span element otherwise display in a list)-->
 								<th:block th:if="${instructor.videoTools.size()==1}">
 									<span class="font-weight-bold">Video Tool: </span>
@@ -149,24 +159,26 @@
 					</div>
 				</th:block>
 				<!--Pagination Area-->
-				<ul class = "pagination">
-					<li th:if = "${currentPage-2 >= 0 }">
-						<a th:text = "${currentPage-1}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-2}"></a>
-					</li>
-					<li th:if = "${currentPage-1 >= 0 }">
-						<a th:text = "${currentPage}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
-					</li>
-					<li th:text = "${currentPage + 1}"></li>
-					<li th:if = "${currentPage + 1 < pageAmount}">
-						<a th:text = "${currentPage + 2}" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
-					</li>
-				</ul>
+				<th:block th:if = "${currentPage}" >
+					<ul class = "pagination">
+						<li th:if = "${currentPage-2 >= 0 }">
+							<a th:text = "${currentPage-1}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-2}"></a>
+						</li>
+						<li th:if = "${currentPage-1 >= 0 }">
+							<a th:text = "${currentPage}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
+						</li>
+						<li th:text = "${currentPage + 1}"></li>
+						<li th:if = "${currentPage + 1 < pageAmount}">
+							<a th:text = "${currentPage + 2}" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
+						</li>
+					</ul>
+				</th:block>
 			</div>
 		</div>
 	</div>
 	<!--Footer-->
 	<div th:insert="fragments :: footer"></div>
 	<!--JavaScript Scripts-->
-	<div th:insert="fragments :: jsScripts"></div>
+	<div th:insert="bootstrap4Fragments :: jsScripts"></div>
 </body>
 </html>

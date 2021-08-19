@@ -5,7 +5,7 @@
 </head>
 <body onload = "populateForm()" class = "registrationForm">
 	<div th:insert="bootstrap4Fragments :: navBar"></div>	
-	<p th:text = "${message}" class="noBannerImageMessage"></p>
+	<p th:if = "${message}" th:text = "${message}" class="noBannerImageMessage"></p>
 	<!--Container for the form-->
 	<div class="formWrap">
 		<i class="fas fa-school"></i>

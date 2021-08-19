@@ -7,7 +7,7 @@
 <body class = "loginForm">
 	<!--Navigation Bar-->
 	<div th:insert = "fragments :: navBar"></div>
-	<p class = "noBannerImageMessage" th:text = "${message}"></p>
+	<p th:if = "${message}" class = "noBannerImageMessage" th:text = "${message}"></p>
 	<!--Container for the form-->
 	<div class="formWrap">
 		<i class="fas fa-user-circle"></i>
@@ -23,7 +23,7 @@
 				<label for="instructorPasswordLogin">Password</label> 
 		 		<input type="password" id="instructorPasswordLogin" name="password" placeholder="Your Password" class="form-control" required/>
 		 	</div>
-		 	<button type="submit" class="btn">Log in</button>
+		 	<button type="submit" class="validButton">Log in</button>
 		</form>
 	</div>
 	<!--Footer-->

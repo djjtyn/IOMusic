@@ -7,7 +7,7 @@
 <body class = "loginForm">
 	<!--Navigation Bar-->
 	<div th:insert = "fragments :: navBar"></div>
-	<p class = "noBannerImageMessage" th:text = "${message}"></p>
+	<p th:if = "${message}" class = "noBannerImageMessage" th:text = "${message}"></p>
 	<!--Container for the form-->
 	<div class="formWrap">
 		<i class="fas fa-user-circle"></i>
@@ -25,7 +25,7 @@
 		 	</div>
 		 	<div class="invalid-feedback form-group">
    			 </div>
-		 	<button type="submit" class="btn">Login</button>
+		 	<button type="submit" class="validButton">Login</button>
 		</form>
 	</div>
 	<!--Footer-->
