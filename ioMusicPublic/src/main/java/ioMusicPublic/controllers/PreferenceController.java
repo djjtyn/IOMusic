@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,18 +31,23 @@ import ioMusicPublic.authentication.instructor.InstructorDetails;
 import ioMusicPublic.models.Artist;
 import ioMusicPublic.models.Genre;
 import ioMusicPublic.models.Instrument;
+import ioMusicPublic.models.LessonRequest;
 import ioMusicPublic.models.VideoTool;
 import ioMusicPublic.models.instructor.Instructor;
 import ioMusicPublic.models.instructor.InstructorFavouriteArtist;
+import ioMusicPublic.models.instructor.InstructorInstrument;
 import ioMusicPublic.models.instructor.InstructorVideoTools;
 import ioMusicPublic.models.instructor.ProfilePhoto;
 import ioMusicPublic.repositories.ArtistRepository;
 import ioMusicPublic.repositories.GenreRepository;
 import ioMusicPublic.repositories.InstructorFavouriteArtistRepository;
+import ioMusicPublic.repositories.InstructorInstrumentRepository;
 import ioMusicPublic.repositories.InstructorRepository;
 import ioMusicPublic.repositories.InstructorVideoToolsRepository;
 import ioMusicPublic.repositories.InstrumentRepository;
+import ioMusicPublic.repositories.LessonRequestRepository;
 import ioMusicPublic.repositories.ProfilePhotoRepository;
+import ioMusicPublic.repositories.StatusRepository;
 import ioMusicPublic.repositories.VideoToolRepository;
 
 @Controller
@@ -73,6 +79,10 @@ public class PreferenceController {
 	@Autowired
 	InstructorVideoToolsRepository instructorVideoToolsRepo;
 	
+	//Instructor Favourite Artists Repository
+	@Autowired
+	InstructorInstrumentRepository instructorInstrumentRepo;
+	
 	//Instructor Repository
 	@Autowired
 	InstructorRepository instructorRepo;
@@ -80,6 +90,14 @@ public class PreferenceController {
 	//ProfilePhoto Repository
 	@Autowired
 	ProfilePhotoRepository photoRepo;
+	
+	//ProfilePhoto Repository
+	@Autowired
+	StatusRepository statusRepo;
+	
+	//LessonRequest Repository
+	@Autowired
+	LessonRequestRepository requestRepo;
 	
 	//AWS S3 Variables
 	@Value("${S3Endpoint}")
@@ -527,5 +545,39 @@ public class PreferenceController {
 		}
 		attributes.addFlashAttribute("message", message);	
 		return "redirect:/myProfile";	
+	}
+	
+	//The method below will delete an instructors account
+	@GetMapping("/deleteAccount")
+	public String deleteAccount(Authentication auth, RedirectAttributes attributes) {
+		String message;
+		//Get the logged in instructor using their id
+		InstructorDetails details = (InstructorDetails) auth.getPrincipal();
+		long instructorId = details.getInstructorId();
+		Instructor instructor = instructorRepo.getById(instructorId);
+		//Remove their favourite artists
+		for(InstructorFavouriteArtist artist: instructor.getFavouriteArtists()) {
+			instructorArtistRepo.delete(artist);
+		}
+		for(InstructorInstrument instrument: instructor.getInstruments()) {
+			instructorInstrumentRepo.delete(instrument);
+		}
+		for(InstructorVideoTools videoTool: instructor.getVideoTools()) {
+			instructorVideoToolsRepo.delete(videoTool);
+		}
+		for(LessonRequest lessonRequest: instructor.getLessonRequests()) {
+			//Make sure the instructor has no lesson requests that have been paid for without being condicted
+			if(!lessonRequest.getStatus().equals(statusRepo.getById((short) 4))){
+				requestRepo.delete(lessonRequest);
+			} else {
+				message = "You have lesson requests that have been paid for but haven't occurred yet";
+			}
+		}
+		//Log the instructor out and delete their profile
+		SecurityContextHolder.clearContext();
+		instructorRepo.delete(instructor);
+		message = "Your Profile has been deleted";
+		attributes.addFlashAttribute("message", message);
+		return "redirect:/";
 	}
 }
