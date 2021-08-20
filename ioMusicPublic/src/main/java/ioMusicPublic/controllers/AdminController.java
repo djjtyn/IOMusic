@@ -92,7 +92,6 @@ public class AdminController {
 			String role = authentication.getAuthorities().toString();
 			if(role.equals("[admin]")) {
 				Long amount = candidateApplicationRepo.countApplicationsPendingApproval();
-				System.out.println(amount);
 				model.addAttribute("amount", amount);
 			}
 		}

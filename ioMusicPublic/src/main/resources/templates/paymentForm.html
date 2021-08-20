@@ -53,7 +53,7 @@
 			</div>
 			<input type = "hidden" id = "requestId" th:value = "${request.requestId}">
 			<div id="card-errors" role="alert"></div>
-				<button id="submit" value="Test">
+				<button id="submit" class = "validButton">
 					<div class="spinner hidden" id="spinner"></div>
 					<span id="button-text" th:text = "'Pay &#8364;' + ${request.cost}"></span>
 				</button>

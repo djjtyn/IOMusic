@@ -1,4 +1,12 @@
 $(document).ready(function() {
+	
+	//***LOADING SCREEN***
+	//Code below will show the loading gif when the page needs to load
+	$(".loadFormButton").on("click", function (){
+		$(".loadingArea").css("display", "block");
+	})
+	
+	//***FORMS***/
 	//Code below will prevent the student registration form from being submitted before it is validated
 	$("#studentRegistrationForm").on("submit", function(event){
 		//Make sure password and confirm password inputs match before the form is submitted
@@ -13,6 +21,7 @@ $(document).ready(function() {
 			event.preventDefault();
 		}
 	})
+	
 	//Code below will prevent the instructor registration form from being submitted before it is validated
 	$("#instructorRegistrationForm").on("submit", function(event){
 		//Make sure password and confirm password inputs match before the form is submitted
@@ -26,20 +35,6 @@ $(document).ready(function() {
 			$(".invalid-feedback").css("display", "block");
 			event.preventDefault();
 		}
-	})
-
-	//Code below will ensure the user doesn't have to re enter their data in the instructor registration form if they navigate to a different page on the instructor registration form
-	$("#addGenreBtn").click(function(){
-		scrapeInstructorRegistrationForm();
-	})
-	$("#addInstrumentBtn").click(function(){
-		scrapeInstructorRegistrationForm();
-	})
-	$("#addArtisttBtn").click(function(){
-		scrapeInstructorRegistrationForm();
-	})
-	$("#addPlatformBtn").click(function(){
-		scrapeInstructorRegistrationForm();
 	})
 	
 	//Code below will prevent the lesson request form from being submitted before it is validated
@@ -57,6 +52,36 @@ $(document).ready(function() {
 		}
 	})
 	
+	//Code below will prevent the comment form from being submitted before it is validated
+	$("#commentForm").on("submit", function (event){
+		//Make sure there is a comment before the form is submitted
+		let commentText = $(".commentArea").val();
+		if(commentText){
+			return true
+		} else {
+			event.preventDefault();
+			$(".invalid-feedback").text("You have not entered a comment");
+			$(".invalid-feedback").css("display", "block");
+		}
+	})
+	
+	
+
+	//Code below will ensure the user doesn't have to re enter their data in the instructor registration form if they navigate to a different page on the instructor registration form
+	$("#addGenreBtn").click(function(){
+		scrapeInstructorRegistrationForm();
+	})
+	$("#addInstrumentBtn").click(function(){
+		scrapeInstructorRegistrationForm();
+	})
+	$("#addArtisttBtn").click(function(){
+		scrapeInstructorRegistrationForm();
+	})
+	$("#addPlatformBtn").click(function(){
+		scrapeInstructorRegistrationForm();
+	})
+	
+
 	//***PROFILE EDITS***
 	//Code below will prevent the password change form being submitted if the two passwords provided dont match
 	$("#passwordChangeForm").on("submit", function (event){
@@ -71,7 +96,7 @@ $(document).ready(function() {
 		}
 	})
 	
-	//Code below will prevent the descritpion change form being submitted if the description length is above 2600 characters
+	//Code below will prevent the description change form being submitted if the description length is above 2600 characters
 	$("#descriptionChangeForm").on("submit", function (event){
 		let descriptionLength = $("#editDescription").val().length;
 		if(descriptionLength <= 2600){
@@ -101,13 +126,7 @@ $(document).ready(function() {
 		})
 		$(".listSelected").text("Your favourite artists will now be listed as:" + selected);	
 	})
-	
-	//***LOADING SCREEN***
-	//Code below will show the loading gif when the page needs to load
-	$(".loadFormButton").on("click", function (){
-		$(".loadingArea").css("display", "block");
-	})
-	
+		
 	//***Instructor FIltering***/
 	//Code below will allow the instructor search functionality to be invoked when the enter key is pressed
 	$("#searchQuery").keypress(function(key){
@@ -117,10 +136,12 @@ $(document).ready(function() {
 			$("#filterInstructorForm").submit();
 		}
 	})
+	
 	//Code below will allow the instructor instrument filter form to be submitted when a instrument is selected
 	$("#filterInstrument").on("change", function(){
 		$("#filterInstructorForm").submit();
 	})
+	
 	//Code below will display the loading gif when the filter form is submitted
 	$("#filterInstructorForm").on("submit", function(){
 		$(".loadingArea").css("display", "block");

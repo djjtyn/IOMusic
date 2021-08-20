@@ -8,10 +8,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +36,6 @@ import ioMusicPublic.repositories.InstructorInstrumentRepository;
 import ioMusicPublic.repositories.InstructorRepository;
 import ioMusicPublic.repositories.InstrumentRepository;
 import ioMusicPublic.repositories.LessonRequestRepository;
-import ioMusicPublic.repositories.ProfilePhotoRepository;
 import ioMusicPublic.repositories.StudentRepository;
 
 
@@ -181,7 +178,6 @@ public class GenericController {
 		//Get the logged in candidate
 		CandidateDetails details = (CandidateDetails) auth.getPrincipal();
 		Integer candidateId = details.getId();
-		System.out.println(candidateId);
 		InstructorCandidate candidate = candidateRepo.getById(candidateId);
 		model.addAttribute("candidate", candidate);
 		return "viewApplication";
@@ -228,7 +224,6 @@ public class GenericController {
 	@PostMapping("viewInstructors")
 	public String applySearchFilter(Model model, @RequestParam("searchQuery") Optional<String> searchQuery, @RequestParam("filterInstrumentId") Optional<Long> instrumentId) {
 		String message;
-		String instrumentName = "";
 		List<Instructor> instructors = new ArrayList<>();
 		int matchAmount;
 		List<Instrument> instruments = new ArrayList<>();
@@ -239,7 +234,6 @@ public class GenericController {
 		model.addAttribute("instruments", instruments);
 		//If the user provides an instructor name to search with
 		if(searchQuery.isPresent() && !searchQuery.get().equals("")) {
-			System.out.println("Test: " + searchQuery.get());
 			 instructors = instructorRepo.searchByQuery(searchQuery.get());
 		} else if(instrumentId.isPresent()){
 			//Get the instructor id's which have that instrument listed, traverse the list and for each loop value get the matching instructor id instance

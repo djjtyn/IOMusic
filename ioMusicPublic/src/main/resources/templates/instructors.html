@@ -4,7 +4,7 @@
 <head th:include="bootstrap4Fragments :: headElement">
 <title>View Instructors</title>
 </head>
-<body>
+<body class = "instructorsPageBody">
 	<!--Navigation Bar-->
 	<div th:insert="bootstrap4Fragments :: navBar"></div>
 	<div class="imgArea">
@@ -36,8 +36,7 @@
 		<div class="rowWrapper">
 			<!--Block to display information if there are no candidate application-->
 			<div th:if="${instructors =='emptyRepo'}">
-				<h1 class="text-center">It seems there are no instructors to
-					display</h1>
+				<h1 class="text-center">It seems there are no instructors to display</h1>
 			</div>
 			<!--If there are candidate applications show them-->
 			<div th:unless="${instructors =='emptyRepo'}">
@@ -47,9 +46,9 @@
 							<div class="col-sm-12 col-md-4">
 								<!--Display each instructors name and a user icon-->
 								<div class="instructorPic">
-									<h3
-										th:text="${instructor.firstName} + ' &nbsp;' + ${instructor.lastName}"></h3>
-									<i class="far fa-user"></i>
+									<h3 th:text="${instructor.firstName} + ' &nbsp;' + ${instructor.lastName}"></h3>
+									<img th:if = "${instructor.profilePhoto} != null "th:src="${instructor.profilePhoto.imageUrl}">
+									<i th:if = "${instructor.profilePhoto} == null" class="far fa-user"></i>
 								</div>
 							</div>
 							<!--This is the area for the instructors description-->
@@ -57,10 +56,11 @@
 								<p class="instructorDescription" th:text="${instructor.description}"></p>
 							</div>
 							<!--This is the area for the instructors preferences-->
-							<div class="col-sm-12 col-md-4 text-center">
+							<div class="col-sm-12 col-md-4">
 								<!--Display Hourly Rate-->
-								<span class="font-weight-bold">Hourly Rate:</span><span
-									th:text="&#8364; + ${instructor.hourlyRate}"></span> <br>
+								<span class="font-weight-bold">Hourly Rate:</span>
+								<span th:text="&#8364; + ${instructor.hourlyRate}"></span> 
+								<br>
 								<!--Display Genre-->
 								<span class="font-weight-bold">Genre:</span>
 								<span th:text="${instructor.genreId.genreName}"></span> 
@@ -117,23 +117,19 @@
 							sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
 							<div class="row">
 								<div class="col-sm-12">
-									<a
-										th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button
-											class="btn btn-primary">View Profile</button></a>
+									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button class="btn btn-primary">View Profile</button></a>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
 									<!--The content in the div below will only be shown if the user is not logged in-->
-									<p>Log into a Student account to request a lesson with this
-										instructor</p>
+									<p>Log into a Student account to request a lesson with this instructor</p>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
-									<a th:href="@{/student/login}"><button class="btn-success">Login</button></a>
-									<a th:href="@{/register/student}"><button
-											class="btn-danger">Register</button></a>
+									<a th:href="@{/student/login}"><button class="validButton">Login</button></a>
+									<a th:href="@{/register/student}"><button class="declineButton">Register</button></a>
 								</div>
 							</div>
 						</div>
@@ -141,13 +137,12 @@
 						<div
 							sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'student'}">
 							<div class="row studentButtons">
-								<a
-									th:href="@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">
-									<button class="btn btn-success">Request Lesson</button>
-								</a> <a
-									th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}">
+								<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}">
 									<button class="btn btn-primary">View Profile</button>
 								</a>
+								<a th:href="@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">
+									<button class="validButton">Request Lesson</button>
+								</a> 
 							</div>
 						</div>
 						<!--If the user is a logged in admin-->

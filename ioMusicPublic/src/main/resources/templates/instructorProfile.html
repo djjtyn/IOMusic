@@ -3,7 +3,7 @@
 <head th:include = "fragments :: headElement">
 	<title>View Instructor</title>
 </head>
-<body>
+<body class = "profileBody">
 	<!--Navigation Bar-->
 	<div th:insert = "fragments :: navBar"></div>
 	<div class="imgArea">
@@ -14,33 +14,36 @@
 	<div class = "container-fluid">
 		<div class = "row">
 			<div class = "col-sm-12 col-md-6">
-				<div>
-					<h3>Instructor Description</h3>
+				<div class = "profileText">
+					<h3 class = "font-weight-bold">Instructor Description</h3>
 					<p th:text = "${instructor.description}"></p>
+					<span class = "font-weight-bold">Genre Speciality: </span>
+					<span th:text = "${instructor.genreId.genreName}"></span>
+					<br>
+					<span class = "font-weight-bold">My Hourly Rate: </span>
+					<span th:text = "&#8364; + ${instructor.hourlyRate}"></span>
+					<!--Display the instructors favourite artists-->
+					<h4 class = "font-weight-bold">Favourite Artists:</h4>
+					<ul>
+						<th:block th:each = "artist: ${instructor.favouriteArtists}">
+							<li th:text = "${artist.artist.artistName}"></li>
+						</th:block>
+					</ul>
+					<!--Display the instructors instruments-->
+					<h4 class = "font-weight-bold">Instruments I Teach:</h4>
+					<ul>
+						<th:block th:each = "instrument: ${instructor.instruments}">
+							<li th:text = "${instrument.instrument.name}"></li>
+						</th:block>
+					</ul>
+					<!--Display the instructors video calling platforms-->
+					<h4 class = "font-weight-bold">Video calling Platforms I Use</h4>
+					<ul>
+						<th:block th:each = "videoTool: ${instructor.videoTools}">
+							<li th:text = "${videoTool.videoTool.name}"></li>
+						</th:block>
+					</ul>
 				</div>
-				<p class = "font-weight-bold" th:text = "Genre + ' ' + Speciality + ':' + ' ' + ${instructor.genreId.genreName}"></p>
-				<p class = "font-weight-bold" th:text = "My + ' ' + Hourly + ' ' + Rate + ':' + ' ' + &#8364; + ${instructor.hourlyRate}"></p>
-				<!--Display the instructors favourite artists-->
-				<h4>Favourite Artists</h4>
-				<ul>
-					<th:block th:each = "artist: ${instructor.favouriteArtists}">
-						<li th:text = "${artist.artist.artistName}"></li>
-					</th:block>
-				</ul>
-				<!--Display the instructors instruments-->
-				<h4>Instruments I Teach</h4>
-				<ul>
-					<th:block th:each = "instrument: ${instructor.instruments}">
-						<li th:text = "${instrument.instrument.name}"></li>
-					</th:block>
-				</ul>
-				<!--Display the instructors video calling platforms-->
-				<h4>Video calling Platforms I Use</h4>
-				<ul>
-					<th:block th:each = "videoTool: ${instructor.videoTools}">
-						<li th:text = "${videoTool.videoTool.name}"></li>
-					</th:block>
-				</ul>
 			</div>
 			<!--Instructors picture-->
 			<div class = "col-sm-12 col-md-6 order-first order-md-2 instructorPhoto">
@@ -66,7 +69,7 @@
 			<div class = "row" sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'student'}">
 				<div class = "col-sm-12">
 					<a th:href = "@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">
-						<button type="submit" class="btn btn-success">Request Lesson</button>
+						<button type="submit" class="validButton">Request Lesson</button>
 					</a>
 				</div>
 			</div>
@@ -77,17 +80,23 @@
 				<div class = "commentWrapper">
 					<i class="fas fa-pen"></i>
 					<h4>Student Comments</h4>
+					<!--If there are no comments-->
+					<div th:if = "${comments =='emptyRepo'}">
+							<div class = "row">
+								<p class = "noCommentMessage">It looks like there are no comments for this instructor yet</p>
+							</div>
+					</div>
 					<!--Show comments if there are comments-->
 					<div th:unless = "${comments =='emptyRepo'}">
 						<th:block th:each="comment: ${comments}">
 							<div class = "comment">
 								<div class = "row">
-									<div class = "col-sm-1 commentDetails">
+									<div class = "col-sm-12 col-md-2 commentDetails">
 										<i class="fas fa-user"></i>
-										<p class = "text-nowrap" th:text = "'Posted' + ' by: ' + ${comment.student.firstName} "></p>
+										<p th:text = "'Posted' + ' by: ' + ${comment.student.firstName} "></p>
 										<p th:text = "${comment.creationDate}"></p>
 									</div>
-									<div class = "col-sm-11 order-first order-md-2">
+									<div class = "col-sm-12 col-md-10 order-first order-md-2">
 										<p class = "commentContent" th:text = "${comment.commentText}"></p>
 									</div>
 								</div>
@@ -102,23 +111,24 @@
 					<div sec:authorize="isAuthenticated()" th:if = "${#authentication.getPrincipal().getRole == 'student'}">
 						<!--If there are no comments to display-->
 						<div  class = "text-center">
-							<form method = "post" action = "/postComment"> 
+							<form method = "post" action = "/postComment" id = "commentForm"> 
 								<!--CSRF Token-->
 								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 								<!--Get the instructor's id-->
 								<input type = "hidden" th:value = "${instructor.instructorId}" name = "instructorId">
 								<div class = "form-group">
-									<textarea th:if = "${comments =='emptyRepo'}" name = "comment" placeholder = "There are no comments for this instructor yet. Be the first to leave a comment!"></textarea>
-									<textarea th:unless = "${comments =='emptyRepo'}" name = "comment" placeholder = "There are no comments for this instructor yet. Be the first to leave a comment!"></textarea>
+									<textarea th:if = "${comments =='emptyRepo'}" class = "commentArea" name = "comment" placeholder = "There are no comments for this instructor yet. Be the first to leave a comment!"></textarea>
+									<textarea th:unless = "${comments =='emptyRepo'}" class = "commentArea" name = "comment" placeholder = "Leave a Comment!"></textarea>
 								</div>
-								<div class = "requestButtons">
-									<button type = "submit" class = "validButton">Leave Comment</button>
+								<div class = "form-group invalid-feedback"></div>
+								<div class = "loadingArea">
+									<img th:src="@{/images/loadingGif.gif}" alt="loadingGif" class="loadingGif">
+									<h6>Loading</h6>
 								</div>
+								<button type = "submit" class = "validButton">Leave Comment</button>
 							</form>
 						</div>
 					</div>
-					
-					<div id = "commentFormArea"></div>
 				</div>
 			</div>		
 		</div>

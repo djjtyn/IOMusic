@@ -74,7 +74,6 @@ public class LessonRequestController {
 			//If the user is an admin, display how many candidate applications they have as Pending Approval
 			if(role.equals("[admin]")) {
 				Long amount = applicationRepo.countApplicationsPendingApproval();
-				System.out.println(amount);
 				model.addAttribute("amount", amount);
 			}
 			if(role.equals("[student]")) {
@@ -193,26 +192,38 @@ public class LessonRequestController {
 	
 	//The method below deals with an instructor approving a lesson request
 	@GetMapping("/lessonRequest/{requestId}/approve")
-	public String approveRequest(@PathVariable("requestId") Long id, RedirectAttributes attributes) {
-		//Get the lesson request and adjust it's status
+	public String approveRequest(@PathVariable("requestId") Long id, Authentication auth, RedirectAttributes attributes) {
+		InstructorDetails details = (InstructorDetails) auth.getPrincipal();
+		Instructor instructor = instructorRepo.getById(details.getInstructorId());
+		//Get the lesson request and adjust it's status, if the lesson request has been assigned to the logged in instructor
 		LessonRequest request = requestRepo.getById(id);
-		request.setStatus(statusRepo.getById((short) 2));
-		requestRepo.save(request);
-		String message = "You have approved this request!!";
-		attributes.addFlashAttribute("message", message);
-		return "redirect:/lessonRequests";
+		if(request.getInstructor() == instructor) {
+			request.setStatus(statusRepo.getById((short) 2));
+			requestRepo.save(request);
+			String message = "You have approved this request!!";
+			attributes.addFlashAttribute("message", message);
+			return "redirect:/lessonRequests";
+		} else {
+			return "error";
+		}
 	}
 	
 	//The method below deals with an instructor declining a lesson request
 	@GetMapping("/lessonRequest/{requestId}/decline")
-	public String declineRequest(@PathVariable("requestId") Long id, RedirectAttributes attributes) {
-		//Get the lesson request and adjust it's status
+	public String declineRequest(@PathVariable("requestId") Long id, Authentication auth, RedirectAttributes attributes) {
+		InstructorDetails details = (InstructorDetails) auth.getPrincipal();
+		Instructor instructor = instructorRepo.getById(details.getInstructorId());
+		//Get the lesson request and adjust it's status, if the lesson request has been assigned to the logged in instructor
 		LessonRequest request = requestRepo.getById(id);
-		request.setStatus(statusRepo.getById((short) 3));
-		requestRepo.save(request);
-		String message = "You have declined this request!!";
-		attributes.addFlashAttribute("message", message);
-		return "redirect:/lessonRequests";
+		if(request.getInstructor() == instructor) {
+			request.setStatus(statusRepo.getById((short) 3));
+			requestRepo.save(request);
+			String message = "You have declined this request!!";
+			attributes.addFlashAttribute("message", message);
+			return "redirect:/lessonRequests";
+		} else {
+			return "error";
+		}
 	}
 	
 	//The method below deals with an instructor attaching a video link url to the paid request
@@ -224,7 +235,7 @@ public class LessonRequestController {
 			InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 			instructor = instructorRepo.getById(details.getInstructorId());
 		} catch(Exception e) {
-			return "/";
+			return "error";
 		}
 		//Get the lesson request and add it to the model if the instructor matches the logged in instructor
 		LessonRequest request = requestRepo.getById(id);
@@ -233,7 +244,7 @@ public class LessonRequestController {
 			setUserNotifications(model);
 			return "attachVideoLink";
 		} else {
-			return "/";
+			return "error";
 		}
 	}
 	

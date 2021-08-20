@@ -13,17 +13,52 @@ body{
 
 nav {
 	min-width:100%;
+	height:auto;
 	display:inline;
+	background-color:black;
+	color:white;
 }
 
-.navbar-nav {
-	width:auto;
-	color:black;
+.navbar-brand {
+	color:red;
+	max-width:3em;
+	height:3em;
+	margin:0 1em 0 0 ;
 }
+nav a {
+	color:white;
+}
+
+nav a:hover {
+	color:green;
+	transition: .5s ease-in-out .1s
+}
+
+nav .dropdown-menu {
+	background-color:black;
+}
+
+nav .dropdown-menu a {
+	color:white;
+}
+
+nav button{
+	color:white;
+}
+
 
 .navbarGreeting {
-	margin:auto;
+	color:red;
+	margin:0 auto;
+	text-align:center;
 }
+
+@media screen and (min-width: 662px){
+	.navbarGreeting {
+		width:50%;
+	}
+}
+
 
 .navBarNotification {
 	background-color:red;
@@ -54,8 +89,8 @@ nav {
 	bottom:0;
 	width:100%;
 	text-align:center;
-	background-color:#343a40;
-	color:green;
+	background-color: black;
+	color:red;
 	height:1.5em	
 } /*Centers the page footer at the bottom of the page*/
 
@@ -111,8 +146,6 @@ nav {
 	}
 }
 
-
-
 @media only screen and (min-width: 600px){
 	.pageHeading {
 		bottom:50%;
@@ -147,6 +180,11 @@ nav {
 	height:5em;
 }
 /*Forms*/
+.invalid-feedback {
+	color:red;
+	font-size:2em;
+}
+
 .formWrap {
 	position:relative;
 	top:25%;
@@ -169,10 +207,9 @@ nav {
 .formWrap i {
 	text-align:center;
 	font-size:6em;
-	margin:0 auto;
 	color:red;
 	background-color:black;
-	border-radius:1em;
+	border-radius:100%;
 	position:relative;
 	padding:.2em;
 	top:-.7em;	
@@ -197,8 +234,9 @@ nav {
 	display:grid;	
 }/*This class is assigned to the body for the registration forms*/
 
-.instructorRegistrationForm {
-	width:100%;
+.registrationForm .formWrap {
+	position:relative;
+	top:5em;
 }
 
 
@@ -253,6 +291,12 @@ nav {
 	background-size: cover;
 	background-position:center;
 	display:grid;
+}
+
+.requestForm .formWrap {
+	position:relative;
+	top:10%;
+	margin-bottom:3em;
 }
 
 .paymentForm {
@@ -394,6 +438,10 @@ nav {
 
 
 /*Page that shows the instructor candidate and instructor listings*/
+.instructorsPageBody {
+	background: linear-gradient(#007bff, black);
+}
+
 .rowWrapper {
 	width:100%;
 	margin:auto;
@@ -405,13 +453,16 @@ nav {
 }
 
 .candidateRow{
+	background: linear-gradient(#0062cc, #dee2e6);
 	margin-bottom:1em;
-	border: 1px solid black;
+	border: .3em solid white;
 	height:auto;
 	width:auto;
 	text-align:center;
 	word-wrap: break-word;
 	padding:1em;
+	border-radius:5em;
+	font-size:1.5em;
 }
 
 
@@ -426,6 +477,15 @@ nav {
 
 .instructorTextArea {
 	margin-bottom:1.5em
+}
+
+.instructorPic {
+	height:100%;
+}
+
+.instructorPic img {
+	height:80%;
+	width:50%;
 }
 
 
@@ -458,9 +518,30 @@ nav {
 	border:1px solid black;
 	border-radius:100%;
 	text-decoration:none;
+	background-color:green;
+	color:black;
+}
+
+.pagination li a {
+	color:white;
 }
 
 /*Instructor Profile Pages*/
+.profileBody {
+	background-color:#38c6e9;
+}
+
+.profileText {
+	font-size: 1.5em;
+    padding: 1em;
+    margin: 1em;
+    text-align: center;
+}
+
+.profileText ul {
+	list-style:none;
+}
+
 .instructorPhoto {
 	font-size: 12em;
 	text-align:center;
@@ -480,16 +561,13 @@ nav {
 	}
 }
 
-.profileTextArea {
-	background-color:red;
-}
-
 .profileButtons {
 	text-align:center;
 }
 
 .comments{
 	margin:1em;
+	font-size:1.5em;
 	width:100%;
 	text-align:center;
 }
@@ -533,7 +611,20 @@ nav {
 	margin:1em;
 }
 
+.noCommentMessage {
+	width:100%;
+	padding:1em;
+}
+
 /*Lesson Requests Page*/
+.requestsPageBody{
+	background-color:#cccccc;
+}
+
+.requestStatus{
+	color:yellow;
+}
+
 .requestButtons {
 	font-size:1.5em;
 }
@@ -562,10 +653,29 @@ nav {
 	outline:none;
 }
 
-.validButton {
-	background-color:green;
+.btn-primary {
+	background-color:blue;
+	font-size:1.5em;
+	padding:1em;
 	color:white;
 	cursor: pointer;
+	border-radius:30%;
+	transition: .5s ease-in-out .1s
+}
+
+.btn-primary:hover {
+	background-color:white;
+	color:blue;
+}
+
+.validButton {
+	background-color:green;
+	font-size:1.5em;
+	padding:1em;
+	color:white;
+	cursor: pointer;
+	border-radius:30%;
+	transition: .5s ease-in-out .1s
 }
 
 .validButton:hover {
@@ -579,7 +689,12 @@ nav {
 
 .declineButton {
 	background-color:red;
+	font-size:1.5em;
+	padding:1em;
+	color:white;
 	cursor: pointer;
+	border-radius:30%;
+	transition: .5s ease-in-out .1s
 }
 
 .declineButton:hover {
