@@ -91,6 +91,12 @@
 									<!--If the lesson request status is Paid-->
 									<button th:if="${request.status.statusType == 'Paid'}" class="valid disabled">Paid</button>
 								</div>
+								<!--If the user is an admin-->
+								<div th:if="${#authentication.getPrincipal().getRole == 'admin'}" class = "requestButtons">
+									<a th:unless="${request.status.statusType == 'Paid'}" th:href="@{/deleteLessonRequest/} + ${request.requestId}">
+										<button class = "declineButton">Delete</button>
+									</a> 
+								</div>
 							</div>
 						</div>
 						<div class="row videoLink" th:if="${request.status.statusType == 'Videolink Sent'}">
@@ -104,6 +110,7 @@
 			</div>
 		</div>
 	</div>
+	<br>
 	<!--Footer-->
 	<div th:insert="fragments :: footer"></div>
 	<!--JavaScript Scripts-->

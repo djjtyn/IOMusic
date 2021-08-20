@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ioMusicPublic.models.Comment;
+import ioMusicPublic.models.LessonRequest;
 import ioMusicPublic.models.instructor.Instructor;
 import ioMusicPublic.models.instructor.InstructorFavouriteArtist;
 import ioMusicPublic.models.instructor.InstructorInstrument;
@@ -34,6 +35,7 @@ import ioMusicPublic.repositories.InstructorFavouriteArtistRepository;
 import ioMusicPublic.repositories.InstructorInstrumentRepository;
 import ioMusicPublic.repositories.InstructorRepository;
 import ioMusicPublic.repositories.InstructorVideoToolsRepository;
+import ioMusicPublic.repositories.LessonRequestRepository;
 import ioMusicPublic.repositories.StatusRepository;
 
 @Controller
@@ -81,9 +83,13 @@ public class AdminController {
 	@Autowired
 	InstructorInstrumentRepository instructorInstrumentRepo;
 	
-	//COmment Repository
+	//Comment Repository
 	@Autowired
 	CommentRepository commentRepo;
+	
+	//LessonRequest Repository
+	@Autowired
+	LessonRequestRepository requestRepo;
 	
 	////The method below will display how many candidate applications the admins have as Pending Approval
 	public void setUserNotifications(Model model) {
@@ -226,7 +232,53 @@ public class AdminController {
 		}
 	}
 	
-	//The method below will allow an admin to delete an instructors comment
+	//The method below will allow an admin to delete an instructor
+	@GetMapping("deleteInstructor/{instructorId}")
+	public String deleteInstructor(Authentication auth, @PathVariable("instructorId") Long instructorId, RedirectAttributes attributes) {
+		//Only allow if the logged in user is an admin
+		String message;
+		//Check that the user is a logged in admin
+		String role = auth.getAuthorities().toString();
+		if(role.equals("[admin]")) {
+			//Get the instructors instance
+			Instructor instructor = instructorRepo.getById(instructorId);
+			try {
+
+				//Delete all records regarding this instructor from all tables they are in
+				for(InstructorFavouriteArtist artist: instructor.getFavouriteArtists()) {
+					instructorFavouriteArtistRepo.delete(artist);
+				}
+				for(InstructorInstrument instrument: instructor.getInstruments()) {
+					instructorInstrumentRepo.delete(instrument);
+				}
+				for(InstructorVideoTools videoTool: instructor.getVideoTools()) {
+					instructorVideoToolsRepo.delete(videoTool);
+				}
+				for(LessonRequest lessonRequest: instructor.getLessonRequests()) {
+					//Make sure the instructor has no lesson requests that have been paid for
+					if(!lessonRequest.getStatus().equals(statusRepo.getById((short) 4))){
+						requestRepo.delete(lessonRequest);
+					} else {
+						message = "This instructor has lesson requests that have been paid for but haven't occurred yet";
+					}
+				}
+				String name = instructor.getFirstName() + " " + instructor.getLastName();
+				instructorRepo.delete(instructor);	
+				message = name + " has been deleted";	
+				attributes.addFlashAttribute("message", message);
+				return "redirect:/viewInstructors?pageNumber=0";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "This comment was unable to be deleted";
+				attributes.addFlashAttribute("message", message);
+				return "redirect:/viewInstructors/profile/" + instructorId;
+			}
+		} else {
+			return "redirect:/viewInstructors/profile/" + instructorId;
+		}
+	}
+	
+	//The method below will allow an admin to delete a comment
 	@GetMapping("instructor/profile/deleteComment/{commentId}")
 	public String deleteComment(Authentication auth, @PathVariable("commentId") Short commentId, RedirectAttributes attributes) {
 		//Only allow if the logged in user is an admin
@@ -250,6 +302,37 @@ public class AdminController {
 			}
 		} else {
 			return "redirect:/viewInstructors/profile/" + instructorId;
+		}
+	}
+	
+	//The method below will allow an admin to delete a lesson request
+	@GetMapping("deleteLessonRequest/{requestId}")
+	public String deleteLessonRequest(Authentication auth, @PathVariable("requestId") Long requestId, RedirectAttributes attributes) {
+		//Only allow if the logged in user is an admin
+		String message;
+		//Check that the user is a logged in admin
+		String role = auth.getAuthorities().toString();;
+		if(role.equals("[admin]")) {
+			try {
+				LessonRequest request = requestRepo.getById(requestId);
+				//If the lesson request has not been paid for it can be deleted
+				if(!request.getStatus().equals(statusRepo.getById((short) 4))) {
+					System.out.println("Can be deleted");
+					requestRepo.delete(request);	
+					message = "Lesson Request has been deleted";
+				} else {
+					message = "This lesson request cannot be deleted due to it's current status";
+				}
+				attributes.addFlashAttribute("message", message);
+				return "redirect:/lessonRequests";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "This comment was unable to be deleted";
+				attributes.addFlashAttribute("message", message);
+				return "redirect:/lessonRequests";
+			}
+		} else {
+			return "error";
 		}
 	}
 }

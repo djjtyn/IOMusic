@@ -8,7 +8,6 @@
 body{
 	margin:0;
 	padding:0;
-	height:100%;
 }
 
 nav {
@@ -31,7 +30,7 @@ nav a {
 
 nav a:hover {
 	color:green;
-	transition: .5s ease-in-out .1s
+	transition: .1s ease-in-out .1s
 }
 
 nav .dropdown-menu {
@@ -201,6 +200,8 @@ nav button{
 	.formWrap {
 	width:50%;
 	margin:8em auto;
+	position:relative;
+	top:5em;
 	}
 }/*This class makes the form in the form wrapper smaller on screen sizes above 700*/
 
@@ -368,12 +369,6 @@ nav button{
 	top: -.5em;
 }
 
-.formWrap button:hover {
-	background-color:white;
-	color:red;
-	cursor: pointer;
-}
-
 /*Home Page*/
 .indexBox {
 	margin:0 0 1em 0;
@@ -415,14 +410,23 @@ nav button{
 }
 /*Registration Options Styling*/
 .registrationOption {
-	min-width: 80%;
-	height: 100%;
+	width: 100%;
 	border: 1px solid;
 	padding:1em;
+	margin-bottom:1em;
 }	/*Styling for the two registration option boxes*/
+
+@media only screen and (min-width: 600px){
+	.registrationOption {
+		position:relative;
+		top:50%;
+		height: 100%;
+	}
+}
 
 .registrationOption a {
 	color:inherit;
+	text-decoration:none;
 }/*Removes the link styling from each registration option button*/
 
 .registrationOption:hover{
@@ -463,6 +467,14 @@ nav button{
 	padding:1em;
 	border-radius:5em;
 	font-size:1.5em;
+}
+
+.candidateRow ul {
+	list-style:none;
+}
+
+.applicationPreferences {
+	margin:1em 0;
 }
 
 
@@ -561,9 +573,9 @@ nav button{
 	}
 }
 
-.profileButtons {
+.profileButtonsWrap {
 	text-align:center;
-}
+} /*This style centers the buttons on each instructors profile page*/
 
 .comments{
 	margin:1em;
@@ -575,6 +587,7 @@ nav button{
 .commentDetails {
 	border:1px solid black;
 	border-radius:100%;
+	margin:0 0 1em 0;
 	text-align:center;
 	padding:1em;
 }
@@ -625,24 +638,6 @@ nav button{
 	color:yellow;
 }
 
-.requestButtons {
-	font-size:1.5em;
-}
-
-.requestButtons a{
-	text-decoration:none;
-}
-
-.requestButtons button {
-    display: block;
-    margin: 1.5em auto;
-    padding:.5em;
-    width: 80%;
-    border-radius: 1em;
-    color: white;
-    transition: .5s ease-in-out .1s;
-}
-
 .requestButtons i {
 	color:white;
 	font-size:.5em;
@@ -653,13 +648,25 @@ nav button{
 	outline:none;
 }
 
+.requestButtons button {
+    display: block;
+    margin: 1.5em auto;
+    padding:.5em;
+    width: auto;;
+    border-radius: 15px;
+   transition: .5s ease-in-out .1s;
+}
+
+.requestButtons a {
+	text-decoration:none;
+}
+
 .btn-primary {
 	background-color:blue;
-	font-size:1.5em;
-	padding:1em;
+	padding:.3em;
 	color:white;
 	cursor: pointer;
-	border-radius:30%;
+	border-radius:15px;
 	transition: .5s ease-in-out .1s
 }
 
@@ -670,11 +677,10 @@ nav button{
 
 .validButton {
 	background-color:green;
-	font-size:1.5em;
-	padding:1em;
+	padding:.3em;
 	color:white;
 	cursor: pointer;
-	border-radius:30%;
+	border-radius:15px;
 	transition: .5s ease-in-out .1s
 }
 
@@ -689,11 +695,10 @@ nav button{
 
 .declineButton {
 	background-color:red;
-	font-size:1.5em;
-	padding:1em;
+	padding:.3em;
 	color:white;
 	cursor: pointer;
-	border-radius:30%;
+	border-radius:15%;
 	transition: .5s ease-in-out .1s
 }
 
@@ -735,11 +740,6 @@ nav button{
 	border-radius:1em;
 }
 
-/*Page that displays an instructor candidates application to the candidate*/
-.candidateStatus h2,
-.candidateStatus h3 {
-	font-size:3em;
-}
 
 .candidateStatus h2 {
 	text-decoration:underline;
@@ -754,6 +754,7 @@ nav button{
 .candidateDetails ul {
 	list-style:none;
 }
+
 
 
 

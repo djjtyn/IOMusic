@@ -481,7 +481,7 @@ public class PreferenceController {
 		if(role.equals("[instructor]")) {
 			return "editProfilePages/addPhoto";
 		} else {
-			return "/";
+			return "error";
 		}
 	}
 	
@@ -506,21 +506,21 @@ public class PreferenceController {
 			String fileName = "instructorID" + instructor.getInstructorId() + "ProfilePhoto";
 			s3Client.getAmazonS3().putObject(new PutObjectRequest(bucketName,fileName, convertedFile).withCannedAcl(CannedAccessControlList.PublicRead));
 			String photoUrl = s3Client.getEndpoint() + "/" + fileName;
-			//Create a ProfilePhoto instance and use the instructor and photo url details
-			ProfilePhoto photoReference = new ProfilePhoto();
 			if(photoRepo.findByInstructor(instructor) == null) {
+				//Create a ProfilePhoto instance and use the instructor and photo url details
+				ProfilePhoto photoReference = new ProfilePhoto();
 				photoReference.setImageUrl(photoUrl);
 				photoReference.setInstructor(instructor);
+				photoRepo.save(photoReference);
+				instructor.setProfilePhoto(photoReference);
 				//Create a success message
 				message = "Your photo has been successfully uploaded";
 			} else {
 				//If the instructor already has a photo, update the photoRepo with the url for the new photo
-				photoReference = photoRepo.findByInstructor(instructor);
+				ProfilePhoto photoReference = photoRepo.findByInstructor(instructor);
 				photoReference.setImageUrl(photoUrl);
 				message = "Your photo has been updated";
 			}
-			photoRepo.save(photoReference);
-			instructor.setProfilePhoto(photoReference);
 			instructorRepo.save(instructor);
 		} else {
 			message = "Your photo is unable to be uploaded. We only allow file types of jpeg, jpg and png. You have tried to upload a file of type: " + fileExtension;

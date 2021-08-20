@@ -51,18 +51,14 @@
 				<i th:if = "${instructor.profilePhoto} == null" class="fas fa-chalkboard-teacher" ></i>
 			</div>
 		</div>
-		<div class = "profileButtons">
+		<div class = "profileButtonsWrap">
+			<!--The content in the div below will only be shown if the user is not logged in-->
 			<div sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
+				<p>Log into a Student account to request a lesson with this instructor</p>
 				<div class="row">
-					<div class="col-sm-12">
-						<!--The content in the div below will only be shown if the user is not logged in-->
-						<p>Log into a Student account to request a lesson with this instructor</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<a th:href="@{/student/login}"><button class="btn-success">Login</button></a>
-						<a th:href="@{/register/student}"><button class="btn-danger">Register</button></a>
+					<div class="col-sm-12 studentButtons">
+						<a th:href="@{/student/login}"><button class="validButton">Login</button></a>
+						<a th:href="@{/register/student}"><button class="declineButton">Register</button></a>
 					</div>
 				</div>
 			</div>
@@ -101,9 +97,11 @@
 									</div>
 								</div>
 								<!--Each comment will have a delete option if the user is a logged in admin-->
-								<a sec:authorize="isAuthenticated()" th:if = "${#authentication.getPrincipal().getRole == 'admin'}" th:href = "@{'/instructor/profile/deleteComment/'} + ${comment.commentId}">
-									<button>Delete</button>
-								</a>
+								<div class = "profileButtonsWrap">
+									<a sec:authorize="isAuthenticated()" th:if = "${#authentication.getPrincipal().getRole == 'admin'}" th:href = "@{'/instructor/profile/deleteComment/'} + ${comment.commentId}">
+										<button class = "validButton">Delete</button>
+									</a>
+								</div>
 							</div>
 						</th:block>
 					</div>

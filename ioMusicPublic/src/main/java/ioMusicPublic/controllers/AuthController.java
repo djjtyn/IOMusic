@@ -40,6 +40,7 @@ import ioMusicPublic.repositories.CandidateInstrumentRepository;
 import ioMusicPublic.repositories.CandidateVideoToolsRepository;
 import ioMusicPublic.repositories.GenreRepository;
 import ioMusicPublic.repositories.InstructorCandidateRepository;
+import ioMusicPublic.repositories.InstructorRepository;
 import ioMusicPublic.repositories.InstrumentRepository;
 import ioMusicPublic.repositories.StatusRepository;
 import ioMusicPublic.repositories.StudentRepository;
@@ -78,6 +79,10 @@ public class AuthController {
 	// InstructorCandidate Repository
 	@Autowired
 	InstructorCandidateRepository candidateRepo;
+	
+	// Instructor Repository
+	@Autowired
+	InstructorRepository instructorRepo;
 
 	// Admin Repository
 	@Autowired
@@ -184,7 +189,7 @@ public class AuthController {
 			message = "Your student account has been created";
 		} catch(Exception e) {
 			e.printStackTrace();
-			message = "There was an issue creating your account";
+			message = "There was an issue creating your account. Have you registered previously?";
 		}
 		attributes.addFlashAttribute("message", message);
 		return "redirect:/student/login";
@@ -252,68 +257,73 @@ public class AuthController {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		password = passwordEncoder.encode(password);
 		String message;
-		//Try to create a InstructorCandidate record using details from the instructor registration form
-		InstructorCandidate candidate = new InstructorCandidate();
-		try {	
-			candidate.setFirstName(firstName);
-			candidate.setLastName(lastName);
-			candidate.setEmail(email);
-			candidate.setPassword(password);
-			candidate.setUserTimeZone(timeZoneRepo.getById(timeZone));
-			candidate.setGenreId(genreRepo.getById(genre));
-			candidate.setHourlyRate(rate);
-			candidate.setDescription(description);
-			// Save the candidate to the repo
-			candidateRepo.save(candidate);
-			//Create a CandidateApplication for the candidate
-			CandidateApplication application = new CandidateApplication();
-			application.setCandidate(candidate);
-			// Set the applications creationDate
-			application.setCreationDate(LocalDate.now());
-			// Set the status for the application as 'Pending Approval' (statusID 1)
-			Status status = statusRepo.getById((short) 1);
-			application.setStatus(status);
-			// Set the applications admin
-			Admin admin = adminRepo.getById((short) 1);
-			application.setAdmin(admin);
-			candidateApplicationRepo.save(application);
-			// Add the application to the admin's list of applications
-			admin.addApplication(application);
-			// Add the application to the candidates application variable
-			candidate.setApplication(application);
-			// Create records in the CandidateFavouriteArtists table using the candidate and their selected artists
-			for (Artist artist : artists) {
-				CandidateFavouriteArtist selectedArtist = new CandidateFavouriteArtist();
-				selectedArtist.setArtist(artist);
-				selectedArtist.setCandidate(candidate);
-				// Save each favourite artist to the candidate favourite artist repo
-				candidateFavouriteArtistRepo.save(selectedArtist);
+		//Make sure there isn't already a registered instructror or candidate account using the same email address
+		if(candidateRepo.findByEmail(email) == null && instructorRepo.findByEmail(email) == null) {
+			//Try to create a InstructorCandidate record using details from the instructor registration form
+			InstructorCandidate candidate = new InstructorCandidate();
+			try {	
+				candidate.setFirstName(firstName);
+				candidate.setLastName(lastName);
+				candidate.setEmail(email);
+				candidate.setPassword(password);
+				candidate.setUserTimeZone(timeZoneRepo.getById(timeZone));
+				candidate.setGenreId(genreRepo.getById(genre));
+				candidate.setHourlyRate(rate);
+				candidate.setDescription(description);
+				// Save the candidate to the repo
+				candidateRepo.save(candidate);
+				//Create a CandidateApplication for the candidate
+				CandidateApplication application = new CandidateApplication();
+				application.setCandidate(candidate);
+				// Set the applications creationDate
+				application.setCreationDate(LocalDate.now());
+				// Set the status for the application as 'Pending Approval' (statusID 1)
+				Status status = statusRepo.getById((short) 1);
+				application.setStatus(status);
+				// Set the applications admin
+				Admin admin = adminRepo.getById((short) 1);
+				application.setAdmin(admin);
+				candidateApplicationRepo.save(application);
+				// Add the application to the admin's list of applications
+				admin.addApplication(application);
+				// Add the application to the candidates application variable
+				candidate.setApplication(application);
+				// Create records in the CandidateFavouriteArtists table using the candidate and their selected artists
+				for (Artist artist : artists) {
+					CandidateFavouriteArtist selectedArtist = new CandidateFavouriteArtist();
+					selectedArtist.setArtist(artist);
+					selectedArtist.setCandidate(candidate);
+					// Save each favourite artist to the candidate favourite artist repo
+					candidateFavouriteArtistRepo.save(selectedArtist);
+				}
+				// Create records in the CandidateInstrument table using the candidate and their selected instruments
+				for (Instrument instrument : instruments) {
+					CandidateInstrument selectedInstrument = new CandidateInstrument();
+					selectedInstrument.setInstrument(instrument);
+					selectedInstrument.setCandidate(candidate);
+					// Save each instrument to the candidate instrument repo
+					candidateInstrumentRepo.save(selectedInstrument);
+				}
+				// Create records in the CandidateVideoTools table using the candidate and their selected video tools
+				for (VideoTool videoTool : videoTools) {
+					CandidateVideoTools selectedVideoTool = new CandidateVideoTools();
+					selectedVideoTool.setVideoTool(videoTool);
+					selectedVideoTool.setCandidate(candidate);
+					// Save each video tool to the candidate video tools repo
+					candidateVideoToolsRepo.save(selectedVideoTool);
+				}
+				candidateApplicationRepo.save(application);
+				message = "The details provided in the Instructor Registration Form will be viewed by an admin who will approve/decline your registration. Plase note, you can "
+						+ "sign in to view your application status using the Instructor Login Page but you will not be considered an instructor unless approved by an admin";
+			} catch(Exception e) {
+				e.printStackTrace();
+				candidateRepo.delete(candidate);
+				message = "There was an issue creating your account";
 			}
-			// Create records in the CandidateInstrument table using the candidate and their selected instruments
-			for (Instrument instrument : instruments) {
-				CandidateInstrument selectedInstrument = new CandidateInstrument();
-				selectedInstrument.setInstrument(instrument);
-				selectedInstrument.setCandidate(candidate);
-				// Save each instrument to the candidate instrument repo
-				candidateInstrumentRepo.save(selectedInstrument);
-			}
-			// Create records in the CandidateVideoTools table using the candidate and their selected video tools
-			for (VideoTool videoTool : videoTools) {
-				CandidateVideoTools selectedVideoTool = new CandidateVideoTools();
-				selectedVideoTool.setVideoTool(videoTool);
-				selectedVideoTool.setCandidate(candidate);
-				// Save each video tool to the candidate video tools repo
-				candidateVideoToolsRepo.save(selectedVideoTool);
-			}
-			candidateApplicationRepo.save(application);
-			message = "The details provided in the Instructor Registration Form will be viewed by an admin who will approve/decline your registration. Plase note, you can "
-					+ "sign in to view your application status using the Instructor Login Page but you will not be considered an instructor unless approved by an admin";
-		} catch(Exception e) {
-			e.printStackTrace();
-			candidateRepo.delete(candidate);
-			message = "There was an issue creating your account";
+		} else {
+			message = "There was an issue creating your account. Have you registered previously?";
 		}
-		attributes.addFlashAttribute("message", message);
-		return "redirect:/instructor/login";
+			attributes.addFlashAttribute("message", message);
+			return "redirect:/instructor/login";
 	}
 }

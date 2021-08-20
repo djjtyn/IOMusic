@@ -12,6 +12,7 @@
 			<div class = "form-group">
 				<h1>Upload Profile Picture</h1>
 				<h4>Upload a profile picture from your computer and click the 'Upload' button</h4>
+				<h6>Accepted file types: jpeg, jpg and png</h6>
 			</div>
 			<form method="post" class = "editForm" action = "/editProfile/photo" id = "photoUploadForm" enctype="multipart/form-data">
 				<!--CSRF Token-->
@@ -20,7 +21,7 @@
 					<input type = "file" name = "image">
 				</div>
 				<div class = "invalid-feedback form-group"></div>
-				<button class = "loadFormButton" type = "submit">Upload</button>
+				<button class = "loadFormButton validButton" type = "submit">Upload</button>
 			</form>
 			<div class = "loadingArea">
 				<img th:src="@{/images/loadingGif.gif}" alt="loadingGif" class="loadingGif">

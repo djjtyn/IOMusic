@@ -8,6 +8,7 @@
 	<!--Navigation Bar-->
 	<div th:insert="bootstrap4Fragments :: navBar"></div>
 	<div class="imgArea">
+		<p th:if = "${message}" th:text="${message}" class="pageMessage"></p>
 		<p th:text="${searchResult}" class="pageMessage"></p>
 		<h1 class="pageHeading">Instructors</h1>
 		<img th:src="@{/images/musicians.jpg}" alt="hiddenMusicians" class="pageBannerImg">
@@ -113,11 +114,10 @@
 						</div>
 						<!--This is the area for the buttons-->
 						<!--If the user is not logged in or is logged into an instructor account-->
-						<div
-							sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
+						<div sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
 							<div class="row">
 								<div class="col-sm-12">
-									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button class="btn btn-primary">View Profile</button></a>
+									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button class="btn-primary">View Profile</button></a>
 								</div>
 							</div>
 							<div class="row">
@@ -138,7 +138,7 @@
 							sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'student'}">
 							<div class="row studentButtons">
 								<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}">
-									<button class="btn btn-primary">View Profile</button>
+									<button class="btn-primary">View Profile</button>
 								</a>
 								<a th:href="@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">
 									<button class="validButton">Request Lesson</button>
@@ -150,9 +150,12 @@
 							sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'admin'}">
 							<div class="row">
 								<div class="col-sm-12">
-									<a
-										th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button
-											class="btn btn-primary">View Profile</button></a>
+									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}">
+										<button class="btn-primary">View Profile</button>
+									</a>
+									<a th:href="@{'deleteInstructor/'} + ${instructor.instructorId}">
+										<button class="declineButton">Delete</button>
+									</a>
 								</div>
 							</div>
 						</div>
@@ -168,7 +171,7 @@
 							<a th:text = "${currentPage}" th:href = "'viewInstructors?pageNumber=' + ${currentPage-1}"></a>
 						</li>
 						<li th:text = "${currentPage + 1}"></li>
-						<li th:if = "${currentPage + 1 < pageAmount}">
+						<li th:if = "${currentPage < pageAmount}">
 							<a th:text = "${currentPage + 2}" th:href = "'viewInstructors?pageNumber=' + ${currentPage+1}"></a>
 						</li>
 					</ul>

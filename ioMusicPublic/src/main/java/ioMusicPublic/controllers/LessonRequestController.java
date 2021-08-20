@@ -263,7 +263,7 @@ public class LessonRequestController {
 				request.setLesson(lesson);
 				request.setStatus(statusRepo.getById((short) 5));
 				requestRepo.save(request);
-				 message = "Your video link has been added for this lesson";
+				message = "Your video link has been added for this lesson";
 			} catch(Exception e) {
 				e.printStackTrace();
 				message = "Your video link was unable to be added for this lesson";

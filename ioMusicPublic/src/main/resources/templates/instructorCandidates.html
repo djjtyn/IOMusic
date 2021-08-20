@@ -62,7 +62,7 @@
 							<a th:if="${candidate.status.statusType == 'Pending Approval'}" th:href = "@{'/admin/instructorCandidate/approve/'} + ${candidate.candidate.candidateId}">
 								<button type="button" class="validButton">Approve</button>
 							</a>
-							<a th:if="${candidate.status.statusType == 'Pending Approval'}" th:href = "@{'/admin/instructorCandidate/decline/'} + ${candidate.id}">
+							<a th:if="${candidate.status.statusType == 'Pending Approval'}" th:href = "@{'/admin/instructorCandidate/decline/'} + ${candidate.candidate.candidateId}">
 								<button type="button" class="declineButton">Decline</button>
 							</a>
 							<!--If the candidate has been Declined-->

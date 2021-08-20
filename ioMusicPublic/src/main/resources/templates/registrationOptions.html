@@ -15,7 +15,7 @@
 	<div class="container">
 		<div class="row">
 			<!--Student Registration option  -->
-			<div class="col-lg-6">
+			<div class="col-sm-12 col-md-6">
 				<div class="registrationOption">
 					<a th:href="@{/register/student}" class = "loadFormButton">
 						<div class=registrationOptionIcon>
@@ -27,11 +27,11 @@
 							a student account you will be able to book music lessons with a
 							wide range of instructors and leave feedback for instructor's to
 							help fellow students choose an instructor.</p>
-					</a>
+
 				</div>
 			</div>
 			<!--Instructor Registration option  -->
-			<div class="col-lg-6">
+			<div class="col-sm-12 col-md-6">
 				<div class="registrationOption">
 					<a th:href="@{/register/instructor}" class = "loadFormButton">
 						<div class=registrationOptionIcon>
@@ -47,6 +47,7 @@
 			</div>
 		</div>
 	</div>
+	<br>
 	<!--Footer-->
 	<div th:insert = "fragments :: footer"></div>
 	<!--JavaScript Scripts-->
