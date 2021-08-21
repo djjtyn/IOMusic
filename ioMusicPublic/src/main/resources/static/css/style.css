@@ -418,8 +418,6 @@ nav button{
 
 @media only screen and (min-width: 600px){
 	.registrationOption {
-		position:relative;
-		top:50%;
 		height: 100%;
 	}
 }
