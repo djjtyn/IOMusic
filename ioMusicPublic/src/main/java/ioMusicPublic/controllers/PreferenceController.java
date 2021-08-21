@@ -111,10 +111,28 @@ public class PreferenceController {
 	
 	@Value("${S3SecretKey}")
 	private String secretKey;
+	
+	//The method below will display how many things need actioning by the logged in user
+	public void setUserNotifications(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			String role = authentication.getAuthorities().toString();
+			if(role.equals("[instructor]")) {
+				//Get how many lesson requests need actioning for the logged in instructor using their id
+				InstructorDetails details = (InstructorDetails) authentication.getPrincipal();
+				long instructorId = details.getInstructorId();
+				Long amount = requestRepo.countRequestsRequiringInstructorAction(instructorId);
+				if(amount>=1) {
+					model.addAttribute("amount", amount);
+				}
+			}
+		}
+	}
 		
 	//The method below will display a page allowing a user to add a genre
 	@GetMapping("/addGenre")
 	public String displayAddGenrePage(Model model) {
+		setUserNotifications(model);
 		//Get list of current genres
 		List<Genre> genreList = genreRepo.findAll();
 		//Check if there are genre's in the genre repo
@@ -153,6 +171,7 @@ public class PreferenceController {
 	//The method below will display a page allowing a user to add an instrument
 	@GetMapping("/addInstrument")
 	public String displayAddInstrumentPage(Model model) {
+		setUserNotifications(model);
 		model.addAttribute("instrument", new Instrument());
 		//Get list of current genres
 		List<Instrument> instrumentList = instrumentRepo.findAll();
@@ -193,6 +212,7 @@ public class PreferenceController {
 	//The method below will display a page allowing a user to add an Artist
 	@GetMapping("/addArtist")
 	public String displayAddArtistPage(Model model) {
+		setUserNotifications(model);
 		//Get list of current artists
 		List<Artist> artistList = artistRepo.findAll();
 		//Check if there are artists in the artist repo
@@ -231,6 +251,7 @@ public class PreferenceController {
 	//The method below will display a page allowing a user to add a video platform
 	@GetMapping("/addVideoPlatform")
 	public String displayAddVideoPlatformPage(Model model) {
+		setUserNotifications(model);
 		//Get list of current platforms
 		List<VideoTool> toolList = videoToolRepo.findAll();
 		//Check if there are video tools in the video tool repo
@@ -271,6 +292,7 @@ public class PreferenceController {
 		InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 		long instructorId = details.getInstructorId();
 		Instructor instructor = instructorRepo.getById(instructorId);
+		setUserNotifications(model);
 		model.addAttribute("instructor", instructor);
 		return "instructorProfile";
 	}
@@ -279,10 +301,11 @@ public class PreferenceController {
 	
 	//The method below will display a page to a instructor which allows them to edit their email address
 	@GetMapping("/editProfile/email")
-	public String displayEmailEditForm(Authentication auth) {
+	public String displayEmailEditForm(Authentication auth, Model model) {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			return "editProfilePages/editEmail";
 		} else {
 			return "/";
@@ -305,10 +328,11 @@ public class PreferenceController {
 	
 	//The method below will display a page to a instructor which allows them to change their password
 	@GetMapping("/editProfile/password")
-	public String displayChangePasswordForm(Authentication auth) {
+	public String displayChangePasswordForm(Authentication auth, Model model) {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			return "editProfilePages/editPassword";
 		} else {
 			return "/";
@@ -338,6 +362,7 @@ public class PreferenceController {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			//Use the instructors current description as the description placeholder text
 			InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 			long instructorId = details.getInstructorId();
@@ -369,6 +394,7 @@ public class PreferenceController {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			//Use the instructors current rate as the rate placeholder text
 			InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 			long instructorId = details.getInstructorId();
@@ -407,6 +433,7 @@ public class PreferenceController {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			//List the instructors currently chosen platforms
 			InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 			long instructorId = details.getInstructorId();
@@ -452,6 +479,7 @@ public class PreferenceController {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			//List the instructors currently chosen artists
 			InstructorDetails details = (InstructorDetails) auth.getPrincipal();
 			long instructorId = details.getInstructorId();
@@ -497,6 +525,7 @@ public class PreferenceController {
 		//Make sure the user is a logged in instructor
 		String role = auth.getAuthorities().toString();
 		if(role.equals("[instructor]")) {
+			setUserNotifications(model);
 			return "editProfilePages/addPhoto";
 		} else {
 			return "error";
