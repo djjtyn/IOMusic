@@ -31,14 +31,14 @@
 				<input type="text"class="form-control" id="artist" name = "artist" placeholder="Artist Name"  autofocus required>
 			</div>
 			<div class="form-group">
-				<button type="submit">Add Artist</button>
+				<button type="submit" class = "validButton">Add Artist</button>
 			</div>
 			<div class="form-group">
 				<a th:href = "@{register/instructor}" class = "loadFormButton" sec:authorize="isAnonymous()">
-					<button type="button">Back To Form</button>	
+					<button type="button" class = "btn-primary">Back To Form</button>	
 				</a>
 				<a th:href = "@{editProfile/artist}" class = "loadFormButton" sec:authorize = "isAuthenticated()">
-					<button type="button">Back</button>	
+					<button type="button" class = "btn-primary">Back</button>	
 				</a>	
 			</div>
 		</form>
