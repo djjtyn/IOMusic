@@ -34,12 +34,27 @@
 									<span class = "font-weight-bold">Student Name: </span>
 									<span th:text="${request.student.firstName} + ' ' + ${request.student.lastName}"></span>
 									<br>
-									<span th:text="Student + ' Email' + ': ' + ${request.student.email}"></span>
+									<span class = "font-weight-bold">Student Email: </span>
+									<span th:text="${request.student.email}"></span>
 								</th:block>
 								<!--If logged in user is a student, display instructor name-->
 								<th:block th:if = "${#authentication.getPrincipal().getRole == 'student'}">
 									<span class = "font-weight-bold">Instructor Name: </span>
 									<span th:text="${request.instructor.firstName} + ' ' + ${request.instructor.lastName}"></span>
+								</th:block>
+								<!--If logged in user is an admin, display instructor and student name and email address-->
+								<th:block th:if = "${#authentication.getPrincipal().getRole == 'admin'}">
+									<span class = "font-weight-bold">Instructor Name: </span>
+									<span th:text="${request.instructor.firstName} + ' ' + ${request.instructor.lastName}"></span>
+									<br>
+									<span class = "font-weight-bold">Instructor Email: </span>
+									<span th:text="${request.instructor.email}"></span>
+									<br>
+									<span class = "font-weight-bold">Student Name: </span>
+									<span th:text="${request.student.firstName} + ' ' + ${request.student.lastName}"></span>
+									<br>
+									<span class = "font-weight-bold">Student Email: </span>
+									<span th:text="${request.student.email}"></span>
 								</th:block>
 								<br>
 								<span class = "font-weight-bold">Lesson Type: </span>

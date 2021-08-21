@@ -29,6 +29,7 @@ import formHelpers.S3Client;
 import formHelpers.VideoToolList;
 import ioMusicPublic.authentication.instructor.InstructorDetails;
 import ioMusicPublic.models.Artist;
+import ioMusicPublic.models.Comment;
 import ioMusicPublic.models.Genre;
 import ioMusicPublic.models.Instrument;
 import ioMusicPublic.models.LessonRequest;
@@ -39,6 +40,7 @@ import ioMusicPublic.models.instructor.InstructorInstrument;
 import ioMusicPublic.models.instructor.InstructorVideoTools;
 import ioMusicPublic.models.instructor.ProfilePhoto;
 import ioMusicPublic.repositories.ArtistRepository;
+import ioMusicPublic.repositories.CommentRepository;
 import ioMusicPublic.repositories.GenreRepository;
 import ioMusicPublic.repositories.InstructorFavouriteArtistRepository;
 import ioMusicPublic.repositories.InstructorInstrumentRepository;
@@ -98,6 +100,10 @@ public class PreferenceController {
 	//LessonRequest Repository
 	@Autowired
 	LessonRequestRepository requestRepo;
+	
+	//Comment Repository
+	@Autowired
+	CommentRepository commentRepo;
 	
 	//AWS S3 Variables
 	@Value("${S3Endpoint}")
@@ -594,13 +600,14 @@ public class PreferenceController {
 		for(InstructorVideoTools videoTool: instructor.getVideoTools()) {
 			instructorVideoToolsRepo.delete(videoTool);
 		}
+		for(Comment comment: instructor.getComments()) {
+			commentRepo.delete(comment);
+		}
+		if(instructor.getProfilePhoto() != null) {
+			photoRepo.delete(instructor.getProfilePhoto());
+		}
 		for(LessonRequest lessonRequest: instructor.getLessonRequests()) {
-			//Make sure the instructor has no lesson requests that have been paid for without being condicted
-			if(!lessonRequest.getStatus().equals(statusRepo.getById((short) 4))){
-				requestRepo.delete(lessonRequest);
-			} else {
-				message = "You have lesson requests that have been paid for but haven't occurred yet";
-			}
+			requestRepo.delete(lessonRequest);
 		}
 		//Log the instructor out and delete their profile
 		SecurityContextHolder.clearContext();
