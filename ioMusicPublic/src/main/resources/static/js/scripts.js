@@ -118,7 +118,7 @@ $(document).ready(function() {
 		$(".listSelected").text("Your video calling platform(s) will now be listed as:" + selected);	
 	})
 	
-	//Code below will display what the instructors favourite artists will be replaced with when they submit the edit artis form
+	//Code below will display what the instructors favourite artists will be replaced with when they submit the edit artist form
 	$("#editArtistform").on("change", function(){
 		let selected = new Array();
 		$("#editArtists option:selected").each(function(){
@@ -127,7 +127,7 @@ $(document).ready(function() {
 		$(".listSelected").text("Your favourite artists will now be listed as:" + selected);	
 	})
 	
-	//Code below wil ldisplay an alert before an instuctor deletes their profile
+	//Code below will display an alert before an instuctor deletes their profile
 	$("#deleteAccountButton").on("click", function(event){
 		if(confirm("If you click OK your account will be removed completely from our database.\n" +
 		"To become an instructor again you will have to register again\nClicking cancel will not delete your account")){

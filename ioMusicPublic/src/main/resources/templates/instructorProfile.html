@@ -53,7 +53,7 @@
 		</div>
 		<div class = "profileButtonsWrap">
 			<!--The content in the div below will only be shown if the user is not logged in-->
-			<div sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
+			<div sec:authorize="isAnonymous()">
 				<p>Log into a Student account to request a lesson with this instructor</p>
 				<div class="row">
 					<div class="col-sm-12 studentButtons">
@@ -62,6 +62,11 @@
 					</div>
 				</div>
 			</div>
+			<!--The content in the div below will only be shown if the user is a logged in instructor or instructor candidate-->
+			<div sec:authorize="isAuthenticated() && ({#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'})">
+				<p>Log into a Student account to request a lesson with this instructor</p>
+			</div>
+			<!--The div below will only be visible if the user is a logged in student-->
 			<div class = "row" sec:authorize="isAuthenticated() && {#authentication.getPrincipal().getRole == 'student'}">
 				<div class = "col-sm-12">
 					<a th:href = "@{'/student/instructor/'} + ${instructor.instructorId} + @{'/requestLesson'}">

@@ -113,8 +113,8 @@
 							</div>
 						</div>
 						<!--This is the area for the buttons-->
-						<!--If the user is not logged in or is logged into an instructor account-->
-						<div sec:authorize="isAnonymous() || {#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'}">
+						<!--If the user is not logged in-->
+						<div sec:authorize="isAnonymous()">
 							<div class="row">
 								<div class="col-sm-12">
 									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button class="btn-primary">View Profile</button></a>
@@ -122,7 +122,6 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-12">
-									<!--The content in the div below will only be shown if the user is not logged in-->
 									<p>Log into a Student account to request a lesson with this instructor</p>
 								</div>
 							</div>
@@ -130,6 +129,15 @@
 								<div class="col-sm-12">
 									<a th:href="@{/student/login}"><button class="validButton">Login</button></a>
 									<a th:href="@{/register/student}"><button class="declineButton">Register</button></a>
+								</div>
+							</div>
+						</div>
+						<!--If the user is a logged in instructor or instructor candidate-->
+						<div sec:authorize="isAuthenticated() && ({#authentication.getPrincipal().getRole == 'instructor'} || {#authentication.getPrincipal().getRole == 'candidate'})">
+							<div class="row">
+								<div class="col-sm-12">
+									<a th:href="@{'viewInstructors/profile/'} + ${instructor.instructorId}"><button class="btn-primary">View Profile</button></a>
+									<p>Log into a Student account to request a lesson with this instructor</p>
 								</div>
 							</div>
 						</div>
